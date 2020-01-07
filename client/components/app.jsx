@@ -1,11 +1,15 @@
 import React from 'react';
 import GradeTable from './gradeTable';
 import Header from './header';
+import GradeForm from './gradeForm';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { grades: [] };
+    this.state = {
+      grades: []
+    };
+    this.newGrade = this.newGrade.bind(this);
   }
 
   componentDidMount() {
@@ -14,7 +18,9 @@ class App extends React.Component {
         return response.json();
       })
       .then(parsedResponse => {
-        this.setState({ grades: parsedResponse });
+        this.setState({
+          grades: parsedResponse
+        });
       })
       .catch(err => {
         console.error('Error: ', err);
@@ -31,14 +37,41 @@ class App extends React.Component {
     return !averageGrade ? 0 : averageGrade.toFixed();
   }
 
+  newGrade(newStudent) {
+    const postInit = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newStudent)
+    };
+    fetch('/api/grades', postInit)
+      .then(response => {
+        return response.json();
+      })
+      .then(parsedResponse => {
+        const currentState = [...this.state.grades];
+        currentState.push(parsedResponse);
+        this.setState({
+          grades: currentState
+        });
+      })
+      .catch(err => {
+        console.error('Error: ', err);
+      });
+  }
+
   render() {
     return (
       <div>
         <div className="container">
           <Header average={this.getAverageGrade()} />
         </div>
-        <div className="container">
-          <GradeTable grades={this.state.grades} />
+        <div className="d-flex">
+          <div className="container col-9">
+            <GradeTable grades={this.state.grades} />
+          </div>
+          <div className="container col-3">
+            <GradeForm newGrade={this.newGrade} />
+          </div>
         </div>
       </div>
     );
