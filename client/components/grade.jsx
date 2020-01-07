@@ -1,17 +1,14 @@
 import React from 'react';
 
-function populateGrades(props) {
-  const tableData = props.map(index => {
-    return (
-      <tr key={index.id}>
-        <th scope="row">{index.id}</th>
-        <td>{index.name}</td>
-        <td>{index.course}</td>
-        <td>{index.grade}</td>
-      </tr>
-    );
-  });
-  return tableData;
+function grades(props) {
+  return (
+    <tr>
+      <th scope="row">{props.grade.id}</th>
+      <td>{props.grade.name}</td>
+      <td>{props.grade.course}</td>
+      <td>{props.grade.grade}</td>
+    </tr>
+  );
 }
 
-export default populateGrades;
+export default grades;

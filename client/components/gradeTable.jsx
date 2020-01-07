@@ -1,5 +1,5 @@
 import React from 'react';
-import populateGrades from './grade';
+import Grades from './grade';
 
 function gradeTable(props) {
   return (
@@ -12,12 +12,12 @@ function gradeTable(props) {
           <th scope="col">Grade</th>
         </tr>
       </thead>
-      {checkForGrades(props)}
+      {gradeElements(props)}
     </table>
   );
 }
 
-function checkForGrades(props) {
+function gradeElements(props) {
   if (props.length === 0) {
     return (
       <tbody>
@@ -27,9 +27,12 @@ function checkForGrades(props) {
       </tbody>
     );
   } else {
+    const tabelItems = props.grades.map(gradeObject => {
+      return <Grades key={gradeObject.id} grade={gradeObject} />;
+    });
     return (
       <tbody>
-        {populateGrades(props)}
+        {tabelItems}
       </tbody>
     );
   }
