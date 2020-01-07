@@ -1,9 +1,12 @@
 import React from 'react';
 
-class Header extends React.Component {
-  render() {
-    return <h1>Student Grade Table</h1>;
-  }
+function header(props) {
+  return (
+    <div className="row">
+      <h1 className="col-9">Student Grade Table</h1>
+      <h5 className="col-3">Average Grade:  <span className="badge badge-primary">{props.average}</span></h5>
+    </div>
+  );
 }
 
-export default Header;
+export default header;

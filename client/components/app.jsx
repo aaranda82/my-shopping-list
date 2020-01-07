@@ -21,11 +21,25 @@ class App extends React.Component {
       });
   }
 
+  getAverageGrade() {
+    let gradeTotal = null;
+    const length = this.state.grades.length;
+    for (let index = 0; index < length; index++) {
+      gradeTotal = (gradeTotal || 0) + this.state.grades[index].grade;
+    }
+    const averageGrade = gradeTotal / length;
+    return !averageGrade ? 0 : averageGrade.toFixed();
+  }
+
   render() {
     return (
       <div>
-        <Header />
-        <GradeTable grades={this.state.grades}/>
+        <div className="container">
+          <Header average={this.getAverageGrade()} />
+        </div>
+        <div className="container">
+          <GradeTable grades={this.state.grades} />
+        </div>
       </div>
     );
   }
