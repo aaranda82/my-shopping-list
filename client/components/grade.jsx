@@ -7,6 +7,9 @@ function grades(props) {
       <td>{props.grade.name}</td>
       <td>{props.grade.course}</td>
       <td>{props.grade.grade}</td>
+      <td>
+        <button type="button" className="btn btn-danger" id={props.grade.id} onClick={props.delete}>Delete</button>
+      </td>
     </tr>
   );
 }
