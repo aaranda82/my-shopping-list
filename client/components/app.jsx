@@ -77,11 +77,11 @@ class App extends React.Component {
         <div className="container">
           <Header average={this.getAverageGrade()} />
         </div>
-        <div className="d-flex">
-          <div className="container col-9">
+        <div className="row">
+          <div className="container col-lg-8 col-9">
             <GradeTable grades={this.state.grades} delete={this.deleteGrade}/>
           </div>
-          <div className="container col-3">
+          <div className="container col-lg-3 col-9">
             <GradeForm newGrade={this.newGrade} />
           </div>
         </div>
