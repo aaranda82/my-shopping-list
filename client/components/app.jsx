@@ -62,15 +62,8 @@ class App extends React.Component {
 
   deleteGrade(event) {
     const id = parseInt(event.target.id);
-    const deleteInit = {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: id })
-    };
+    const deleteInit = { method: 'DELETE' };
     fetch(`/api/grades/${id}`, deleteInit)
-      .then(response => {
-        return response.json();
-      })
       .then(() => {
         const remainingState = this.state.grades.filter(index => index.id !== id);
         this.setState({ grades: remainingState });
