@@ -46,19 +46,19 @@ class GradeForm extends React.Component {
         <form>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
-              <span className="input-group-text fas fa-user"></span>
+              <div className="input-group-text"><i className="fas fa-user"></i></div>
             </div>
             <input type="text" className="form-control" value={this.state.name} onChange={this.studentChange} />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
-              <span className="input-group-text far fa-list-alt"></span>
+              <div className="input-group-text"><i className="fas fa-list-alt"></i></div>
             </div>
             <input type="text" className="form-control" value={this.state.course} onChange={this.courseChange}/>
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
-              <span className="input-group-text fas fa-graduation-cap"></span>
+              <div className="input-group-text"><i className="fas fa-graduation-cap"></i></div>
             </div>
             <input type="text" className="form-control" value={this.state.grade} onChange={this.gradeChange}/>
           </div>
