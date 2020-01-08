@@ -7,10 +7,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grades: []
+      grades: [],
+      gradeToUpdate: {}
     };
     this.newGrade = this.newGrade.bind(this);
     this.deleteGrade = this.deleteGrade.bind(this);
+    this.studentToUpdate = this.studentToUpdate.bind(this);
+    this.updateGrade = this.updateGrade.bind(this);
   }
 
   componentDidMount() {
@@ -71,6 +74,35 @@ class App extends React.Component {
       .catch(error => console.error('Error: ', error));
   }
 
+  studentToUpdate(event) {
+    this.setState({
+      gradeToUpdate: {
+        name: event.target.name,
+        course: event.target.title,
+        grade: event.target.value,
+        id: event.target.id
+      }
+    });
+  }
+
+  updateGrade(grade) {
+    const updateInit = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(grade)
+    };
+    fetch(`/api/grades/${grade.id}`, updateInit)
+      .then(response => {
+        return response.json();
+      })
+      .then(parsedResponse => {
+        const currentGrades = [...this.state.grades];
+        const updateIndex = currentGrades.findIndex(index => index.id === parsedResponse.id);
+        currentGrades[updateIndex] = parsedResponse;
+        this.setState({ grades: currentGrades });
+      });
+  }
+
   render() {
     return (
       <div>
@@ -79,10 +111,10 @@ class App extends React.Component {
         </div>
         <div className="row">
           <div className="container col-lg-8 col-9">
-            <GradeTable grades={this.state.grades} delete={this.deleteGrade}/>
+            <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} />
           </div>
           <div className="container col-lg-3 col-9">
-            <GradeForm newGrade={this.newGrade} />
+            <GradeForm newGrade={this.newGrade} gradeToUpdate={this.state.gradeToUpdate} updateGrade={this.updateGrade} />
           </div>
         </div>
       </div>
