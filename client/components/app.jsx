@@ -68,7 +68,7 @@ class App extends React.Component {
         const remainingState = this.state.grades.filter(index => index.id !== id);
         this.setState({ grades: remainingState });
       })
-      .catch(err => console.error('Error: ', err));
+      .catch(error => console.error('Error: ', error));
   }
 
   render() {
