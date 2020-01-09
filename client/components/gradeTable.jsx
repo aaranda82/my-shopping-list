@@ -10,7 +10,7 @@ function gradeTable(props) {
           <th scope="col">Name</th>
           <th scope="col">Course</th>
           <th scope="col">Grade</th>
-          <th scope="col">Operations</th>
+          <th scope="col" className="text-center">Operations</th>
         </tr>
       </thead>
       {gradeElements(props)}
@@ -29,7 +29,7 @@ function gradeElements(props) {
     );
   } else {
     const tabelItems = props.grades.map(gradeObject => {
-      return <Grades key={gradeObject.id} grade={gradeObject} delete={props.delete}/>;
+      return <Grades key={gradeObject.id} grade={gradeObject} update={props.update} delete={props.delete}/>;
     });
     return (
       <tbody>
