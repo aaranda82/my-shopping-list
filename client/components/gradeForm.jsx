@@ -10,9 +10,7 @@ class GradeForm extends React.Component {
         course: '',
         grade: ''
       },
-      addOrUpdateButton: 'btn btn-primary m-1',
-      addOrUpdate: 'ADD',
-      handleAddOrUpdate: this.handleAdd
+      addOrUpdate: 'ADD'
     };
     this.studentChange = this.studentChange.bind(this);
     this.courseChange = this.courseChange.bind(this);
@@ -38,9 +36,7 @@ class GradeForm extends React.Component {
         course: '',
         grade: ''
       },
-      addOrUpdateButton: 'btn btn-primary m-1',
-      addOrUpdate: 'ADD',
-      handleAddOrUpdate: this.handleAdd
+      addOrUpdate: 'ADD'
     });
   }
 
@@ -71,9 +67,7 @@ class GradeForm extends React.Component {
           grade: this.props.gradeToUpdate.grade,
           id: parseInt(this.props.gradeToUpdate.id)
         },
-        addOrUpdateButton: 'btn btn-success m-1',
-        addOrUpdate: 'UPDATE',
-        handleAddOrUpdate: this.handleUpdate
+        addOrUpdate: 'UPDATE'
       });
     }
   }
@@ -101,7 +95,12 @@ class GradeForm extends React.Component {
             <input type="text" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} />
           </div>
         </form>
-        <button type="button" className={this.state.addOrUpdateButton} onClick={this.state.handleAddOrUpdate}>{this.state.addOrUpdate}</button>
+        <button
+          type="button"
+          className={this.state.addOrUpdate === 'ADD' ? 'btn btn-primary m-1' : 'btn btn-success m-1'}
+          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate}>
+          {this.state.addOrUpdate}
+        </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
       </div>
     );
