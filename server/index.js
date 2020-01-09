@@ -1,3 +1,65 @@
+// const express = require('express');
+// const app = express();
+// const fs = require('fs');
+// const path = require('path')
+// const gradesObj = require('../database/data.json');
+// const currentGrades = gradesObj.grades;
+// const dbPath = path.resolve(__dirname, '../database/data.json');
+
+// const errors = [
+//   { Error: 'Can not find note with that id' },
+//   { Error: 'Id must be positive integer' },
+//   { Error: 'An unexpected error occurred.' },
+//   { Error: 'content is a required field' },
+//   { Error: 'An unexpected error occurred' }
+// ];
+
+// app.get('/api/grades', (req, res) => {
+//   res.json(gradesObj);
+// });
+
+// app.use(express.json());
+
+// app.post('/api/grades', (req, res) => {
+//   const nextId = gradesObj.nextId - 1;
+//   currentGrades.push(req.body);
+//   currentGrades[nextId].id = gradesObj.nextId;
+//   fs.writeFile(
+//     dbPath,
+//     JSON.stringify(gradesObj, null, 2),
+//     (err) => {
+//       if (err) {
+//         res.status(500).send(errors[4]);
+//         console.error(err);
+//       } else {
+//         res.status(201).send(currentGrades[nextId]);
+//         gradesObj.nextId++;
+//       }
+//     });
+// });
+
+// app.delete('/api/grades/:id', (req, res)=>{
+//   currentGrades.splice(req.params.id,1)
+//   console.log('current Grades', currentGrades)
+//   fs.writeFile(
+//     dbPath,
+//     JSON.stringify(gradesObj, null, 2),
+//     (err)=> {
+//       if(err) {
+//         res.status(500).send(errors[4])
+//         console.error(err)
+//       }else{
+//         res.status(204).send('')
+//       }
+//     }
+//   )
+// })
+
+// app.listen(3000, () => {
+//   // eslint-disable-next-line no-console
+//   console.log('Express Server Listening on Port 3000!');
+// });
+
 const path = require('path');
 const jsonServer = require('json-server');
 
