@@ -1,5 +1,5 @@
 {
-  "nextId": 7,
+  "nextId": 12,
   "grades": [
     {
       "id": 1,
@@ -24,6 +24,30 @@
       "course": "Express",
       "grade": "100",
       "id": 4
+    },
+    {
+      "name": "Ted",
+      "course": "Dancing",
+      "grade": "100",
+      "id": 7
+    },
+    {
+      "name": "George",
+      "course": "History",
+      "grade": "100",
+      "id": 8
+    },
+    {
+      "name": "Alex",
+      "course": "Math",
+      "grade": "100",
+      "id": 9
+    },
+    {
+      "name": "Steve",
+      "course": "Science",
+      "grade": 25,
+      "id": 10
     }
   ]
 }
