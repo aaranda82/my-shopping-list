@@ -1,5 +1,5 @@
 {
-  "nextId": 12,
+  "nextId": 14,
   "grades": [
     {
       "id": 1,
@@ -40,14 +40,20 @@
     {
       "name": "Alex",
       "course": "Math",
-      "grade": "100",
+      "grade": 98,
       "id": 9
     },
     {
-      "name": "Steve",
-      "course": "Science",
-      "grade": 25,
-      "id": 10
+      "name": "Bob",
+      "course": "Stuff",
+      "grade": 75,
+      "id": 12
+    },
+    {
+      "name": "Tom",
+      "course": "tm",
+      "grade": 39,
+      "id": 13
     }
   ]
 }

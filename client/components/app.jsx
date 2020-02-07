@@ -21,23 +21,15 @@ class App extends React.Component {
       .then(response => {
         return response.json();
       })
-      .then(parsedResponse => {
-        this.setState({
-          grades: parsedResponse
-        });
+      .then(grades => {
+        return this.setState({ grades });
       })
-      .catch(err => {
-        console.error('Error: ', err);
-      });
+      .catch(err => { console.error(`Error: ${err}`); });
   }
 
   getAverageGrade() {
-    let gradeTotal = null;
-    const length = this.state.grades.length;
-    for (let index = 0; index < length; index++) {
-      gradeTotal = (gradeTotal || 0) + this.state.grades[index].grade;
-    }
-    const averageGrade = gradeTotal / length;
+    const gradeTotal = this.state.grades.reduce((acc, cur) => acc + parseInt(cur.grade), 0);
+    const averageGrade = gradeTotal / this.state.grades.length;
     return !averageGrade ? 0 : averageGrade.toFixed();
   }
 
@@ -48,19 +40,13 @@ class App extends React.Component {
       body: JSON.stringify(newStudent)
     };
     fetch('/api/grades', postInit)
-      .then(response => {
-        return response.json();
+      .then(response => response.json())
+      .then(newGrade => {
+        const grades = [...this.state.grades];
+        grades.push(newGrade);
+        return this.setState({ grades });
       })
-      .then(parsedResponse => {
-        const currentState = [...this.state.grades];
-        currentState.push(parsedResponse);
-        this.setState({
-          grades: currentState
-        });
-      })
-      .catch(err => {
-        console.error('Error: ', err);
-      });
+      .catch(err => { console.error(`Error: ${err}`); });
   }
 
   deleteGrade(event) {
@@ -68,10 +54,10 @@ class App extends React.Component {
     const deleteInit = { method: 'DELETE' };
     fetch(`/api/grades/${id}`, deleteInit)
       .then(() => {
-        const remainingState = this.state.grades.filter(index => index.id !== id);
-        this.setState({ grades: remainingState });
+        const grades = this.state.grades.filter(index => index.id !== id);
+        return this.setState({ grades });
       })
-      .catch(error => console.error('Error: ', error));
+      .catch(err => { console.error(`Error: ${err}`); });
   }
 
   studentToUpdate(event) {
@@ -92,15 +78,14 @@ class App extends React.Component {
       body: JSON.stringify(grade)
     };
     fetch(`/api/grades/${grade.id}`, updateInit)
-      .then(response => {
-        return response.json();
+      .then(response => response.json())
+      .then(updatedGrade => {
+        const grades = [...this.state.grades];
+        const indexOfUpdated = grades.findIndex(index => index.id === updatedGrade.id);
+        grades[indexOfUpdated] = updatedGrade;
+        return this.setState({ grades });
       })
-      .then(parsedResponse => {
-        const currentGrades = [...this.state.grades];
-        const updateIndex = currentGrades.findIndex(index => index.id === parsedResponse.id);
-        currentGrades[updateIndex] = parsedResponse;
-        this.setState({ grades: currentGrades });
-      });
+      .catch(err => { console.error(`Error: ${err}`); });
   }
 
   render() {
