@@ -13,12 +13,11 @@ const errors = [
   { Error: 'Content is a required field' },
   { Error: 'An unexpected error occurred' },
   { Error: 'A "course" is required' },
-  { Error: 'A "grade" is required' },
-  { Error: 'Grade must be a number ranging from 0 and 100' }
+  { Error: 'Grade must be a number between 0 and 100' }
 ];
 
 app.get('/api/grades', (req, res) => {
-  res.json(gradesObj);
+  res.json(gradesObj.grades);
 });
 
 app.use(express.json());
@@ -27,14 +26,10 @@ app.post('/api/grades', (req, res) => {
   const gradeToPost = req.body;
   if (!gradeToPost.name) {
     res.status(400).send(errors[2]);
-  }
-  if (!gradeToPost.course) {
+  } else if (!gradeToPost.course) {
     res.status(400).send(errors[5]);
-  }
-  if (!gradeToPost.grade) {
-    res.status(400).send(errors[6]);
-  } else if (gradeToPost.grade < 0 || gradeToPost.grade > 100 || typeof gradeToPost.grade === 'number') {
-    res.status(400).send(errors[7]);
+  } else if (!gradeToPost.grade || gradeToPost.grade < 0 || gradeToPost.grade > 100 || typeof gradeToPost.grade !== 'number') {
+    return res.status(400).send(errors[6]);
   }
   gradeToPost.grade = parseInt(gradeToPost.grade);
   gradeToPost.id = gradesObj.nextId;
@@ -90,7 +85,7 @@ app.put('/api/grades/:id', (req, res) => {
         res.status(500).send(errors[4]);
         console.error(err);
       } else {
-        res.status(204).send(currentGrades[indexToUpdate]);
+        return res.status(204).send(currentGrades[indexToUpdate]);
       }
     }
   );

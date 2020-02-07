@@ -41,37 +41,39 @@ class GradeForm extends React.Component {
   }
 
   studentChange(event) {
-    const currentStateCopy = { ...this.state.grade };
-    currentStateCopy.name = event.target.value;
-    this.setState({ grade: currentStateCopy });
+    const grade = { ...this.state.grade };
+    grade.name = event.target.value;
+    this.setState({ grade });
   }
 
   courseChange(event) {
-    const currentStateCopy = { ...this.state.grade };
-    currentStateCopy.course = event.target.value;
-    this.setState({ grade: currentStateCopy });
+    const grade = { ...this.state.grade };
+    grade.course = event.target.value;
+    this.setState({ grade });
   }
 
   gradeChange(event) {
-    const currentStateCopy = { ...this.state.grade };
-    currentStateCopy.grade = parseInt(event.target.value);
-    this.setState({ grade: currentStateCopy });
+    const grade = { ...this.state.grade };
+    grade.grade = parseInt(event.target.value);
+    this.setState({ grade });
   }
 
   componentDidUpdate(prevProps) {
+    const { name, course, grade, id } = this.props.gradeToUpdate;
     if (this.props.gradeToUpdate !== prevProps.gradeToUpdate) {
       this.setState({
         grade: {
-          name: this.props.gradeToUpdate.name,
-          course: this.props.gradeToUpdate.course,
-          grade: this.props.gradeToUpdate.grade,
-          id: parseInt(this.props.gradeToUpdate.id)
+          name: name,
+          course: course,
+          grade: grade,
+          id: parseInt(id)
         },
         addOrUpdate: 'UPDATE'
       });
     }
   }
 
+  // generate inputs dynamically
   render() {
     return (
       <div>
