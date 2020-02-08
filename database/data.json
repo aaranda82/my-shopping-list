@@ -1,5 +1,5 @@
 {
-  "nextId": 14,
+  "nextId": 15,
   "grades": [
     {
       "id": 1,
@@ -10,12 +10,6 @@
     {
       "id": 2,
       "name": "Brendan Eich",
-      "course": "JavaScript",
-      "grade": 100
-    },
-    {
-      "id": 3,
-      "name": "Douglas Crockford",
       "course": "JavaScript",
       "grade": 100
     },
@@ -32,28 +26,10 @@
       "id": 7
     },
     {
-      "name": "George",
-      "course": "History",
-      "grade": "100",
-      "id": 8
-    },
-    {
       "name": "Alex",
-      "course": "Math",
-      "grade": 98,
-      "id": 9
-    },
-    {
-      "name": "Bob",
-      "course": "Stuff",
-      "grade": 75,
-      "id": 12
-    },
-    {
-      "name": "Tom",
-      "course": "tm",
-      "grade": 39,
-      "id": 13
+      "course": "asd",
+      "grade": 100,
+      "id": 8
     }
   ]
 }
