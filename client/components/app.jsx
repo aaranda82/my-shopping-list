@@ -57,7 +57,7 @@ class App extends React.Component {
   }
 
   studentToUpdate(event) {
-    const { name, title, value, id } = event.target
+    const { name, title, value, id } = event.target;
     this.setState({
       gradeToUpdate: {
         name,
@@ -68,27 +68,26 @@ class App extends React.Component {
     });
   }
 
-
-  updateGrade(grade){
+  updateGrade(grade) {
     const updateInit = {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(grade)
-    }
-    const id = parseInt(grade.id)
+    };
+    const id = parseInt(grade.id);
     fetch(`/api/grades/${id}`, updateInit)
-    .then(res=>{
-      console.log("hello")
-      return res.json()
-    })
-    .then(updatedGrade=>{
-      console.log("hi", updatedGrade)
-      const grades = [...this.state.grades]
-      const indexOfUpdated = grades.findIndex(index => index.id === updatedGrade.id)
-      grades[indexOfUpdated] = updatedGrade
-      return this.setState({grades})
-    })
-    .catch(err=>console.error(`An error occured: ${err}`))
+      .then(res => {
+        console.log('hello');
+        return res.json();
+      })
+      .then(updatedGrade => {
+        console.log('hi', updatedGrade);
+        const grades = [...this.state.grades];
+        const indexOfUpdated = grades.findIndex(index => index.id === updatedGrade.id);
+        grades[indexOfUpdated] = updatedGrade;
+        return this.setState({ grades });
+      })
+      .catch(err => console.error(`An error occured: ${err}`));
   }
 
   render() {

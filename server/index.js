@@ -67,7 +67,7 @@ app.delete('/api/grades/:id', (req, res) => {
 
 app.put('/api/grades/:id', (req, res) => {
   const indexToUpdate = DBGrades.findIndex(element => parseInt(element.id) === parseInt(req.params.id));
-  const { name, course, grade } = req.body
+  const { name, course, grade } = req.body;
   if (name && course && grade) {
     DBGrades[indexToUpdate].name = req.body.name;
     DBGrades[indexToUpdate].course = req.body.course;
@@ -82,7 +82,7 @@ app.put('/api/grades/:id', (req, res) => {
         res.status(500).send(errors[4]);
         return console.error(err);
       } else {
-        console.log(DBGrades[indexToUpdate])
+        console.log(DBGrades[indexToUpdate]);
         res.status(204).json(DBGrades[indexToUpdate]);
       }
     }
