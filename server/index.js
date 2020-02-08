@@ -3,7 +3,7 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const gradesObj = require('../database/data.json');
-const currentGrades = gradesObj.grades;
+const DBGrades = gradesObj.grades;
 const dbPath = path.resolve(__dirname, '../database/data.json');
 
 const errors = [
@@ -33,7 +33,7 @@ app.post('/api/grades', (req, res) => {
   }
   gradeToPost.grade = parseInt(gradeToPost.grade);
   gradeToPost.id = gradesObj.nextId;
-  currentGrades.push(gradeToPost);
+  DBGrades.push(gradeToPost);
   gradesObj.nextId++;
   fs.writeFile(
     dbPath,
@@ -49,8 +49,8 @@ app.post('/api/grades', (req, res) => {
 });
 
 app.delete('/api/grades/:id', (req, res) => {
-  const indexToUpdate = currentGrades.findIndex(element => parseInt(element.id) === parseInt(req.params.id));
-  currentGrades.splice(indexToUpdate, 1);
+  const indexToUpdate = DBGrades.findIndex(element => parseInt(element.id) === parseInt(req.params.id));
+  DBGrades.splice(indexToUpdate, 1);
   fs.writeFile(
     dbPath,
     JSON.stringify(gradesObj, null, 2),
@@ -66,26 +66,24 @@ app.delete('/api/grades/:id', (req, res) => {
 });
 
 app.put('/api/grades/:id', (req, res) => {
-  const indexToUpdate = currentGrades.findIndex(element => parseInt(element.id) === parseInt(req.params.id));
-  if (req.body.name) {
-    currentGrades[indexToUpdate].name = req.body.name;
+  const indexToUpdate = DBGrades.findIndex(element => parseInt(element.id) === parseInt(req.params.id));
+  const { name, course, grade } = req.body
+  if (name && course && grade) {
+    DBGrades[indexToUpdate].name = req.body.name;
+    DBGrades[indexToUpdate].course = req.body.course;
+    DBGrades[indexToUpdate].grade = parseInt(req.body.grade);
+    DBGrades[indexToUpdate].id = parseInt(req.params.id);
   }
-  if (req.body.course) {
-    currentGrades[indexToUpdate].course = req.body.course;
-  }
-  if (req.body.grade) {
-    currentGrades[indexToUpdate].grade = parseInt(req.body.grade);
-  }
-  currentGrades[indexToUpdate].id = parseInt(req.params.id);
   fs.writeFile(
     dbPath,
     JSON.stringify(gradesObj, null, 2),
     err => {
       if (err) {
         res.status(500).send(errors[4]);
-        console.error(err);
+        return console.error(err);
       } else {
-        return res.status(204).send(currentGrades[indexToUpdate]);
+        console.log(DBGrades[indexToUpdate])
+        res.status(204).json(DBGrades[indexToUpdate]);
       }
     }
   );
