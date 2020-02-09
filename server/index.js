@@ -59,7 +59,7 @@ app.delete('/api/grades/:id', (req, res) => {
         res.status(500).send(errors[4]);
         console.error(err);
       } else {
-        res.status(204).send('');
+        res.status(201).send('');
       }
     }
   );
@@ -80,10 +80,8 @@ app.put('/api/grades/:id', (req, res) => {
     err => {
       if (err) {
         res.status(500).send(errors[4]);
-        return console.error(err);
       } else {
-        console.log(DBGrades[indexToUpdate]);
-        res.status(204).json(DBGrades[indexToUpdate]);
+        res.status(201).json(DBGrades[indexToUpdate]);
       }
     }
   );
@@ -93,18 +91,3 @@ app.listen(3001, () => {
   // eslint-disable-next-line no-console
   console.log('Express Server Listening on Port 3001!');
 });
-
-// const path = require('path');
-// const jsonServer = require('json-server');
-
-// const dbPath = path.resolve(__dirname, '../database/db.json');
-// const server = jsonServer.create();
-// const middleware = jsonServer.defaults();
-// const endpoints = jsonServer.router(dbPath);
-
-// server.use(middleware);
-// server.use('/api', endpoints);
-// server.listen(3001, () => {
-//   // eslint-disable-next-line no-console
-//   console.log('JSON Server listening on port 3001\n');
-// });

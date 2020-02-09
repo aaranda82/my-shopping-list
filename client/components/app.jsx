@@ -69,19 +69,20 @@ class App extends React.Component {
   }
 
   updateGrade(grade) {
+
     const updateInit = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(grade)
+      body: JSON.stringify({
+        course: grade.course,
+        name: grade.name,
+        grade: parseInt(grade.grade)
+      })
     };
     const id = parseInt(grade.id);
     fetch(`/api/grades/${id}`, updateInit)
-      .then(res => {
-        console.log('hello');
-        return res.json();
-      })
+      .then(res => res.json())
       .then(updatedGrade => {
-        console.log('hi', updatedGrade);
         const grades = [...this.state.grades];
         const indexOfUpdated = grades.findIndex(index => index.id === updatedGrade.id);
         grades[indexOfUpdated] = updatedGrade;
@@ -92,19 +93,21 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <div className="container">
-          <Header average={this.getAverageGrade()} />
-        </div>
-        <div className="row">
-          <div className="container col-lg-8 col-9">
-            <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} />
+      <>
+        <div id="gradeArea" className="container">
+          <div className="row">
+            <div id="header" className="col-12 col-sm-6 col-lg-12">
+              <Header average={this.getAverageGrade()} />
+            </div>
+            <div id="gradeForm" className="col-9 col-sm-6 col-lg-4 ml-5 ml-sm-0 pt-5">
+              <GradeForm newGrade={this.newGrade} gradeToUpdate={this.state.gradeToUpdate} updateGrade={this.updateGrade} />
+            </div>
+            <div id="gradeTable" className="col-12 col-lg-8">
+              <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} />
+            </div>
           </div>
-          <div className="container col-lg-3 col-9">
-            <GradeForm newGrade={this.newGrade} gradeToUpdate={this.state.gradeToUpdate} updateGrade={this.updateGrade} />
-          </div>
         </div>
-      </div>
+      </>
     );
   }
 }

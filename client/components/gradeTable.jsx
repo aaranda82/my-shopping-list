@@ -18,7 +18,6 @@ function gradeTable(props) {
   );
 }
 
-// make another page
 function gradeElements(props) {
   const grades = props.grades;
   if (!grades) {
@@ -31,7 +30,7 @@ function gradeElements(props) {
     );
   } else {
     const tabelItems = grades.map(gradeObject => {
-      return <Grades key={gradeObject.id} grade={gradeObject} update={props.update} delete={props.delete}/>;
+      return <Grades key={gradeObject.id} grade={gradeObject} update={props.update} delete={props.delete} />;
     });
     return (
       <tbody>
