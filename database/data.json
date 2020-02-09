@@ -1,5 +1,5 @@
 {
-  "nextId": 15,
+  "nextId": 16,
   "grades": [
     {
       "id": 1,
@@ -27,7 +27,7 @@
     },
     {
       "name": "Alex",
-      "course": "asd",
+      "course": "PE",
       "grade": 100,
       "id": 8
     }
