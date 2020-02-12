@@ -1,9 +1,32 @@
 import React from 'react';
 import Grades from './grade';
 
+function gradeElements(props) {
+  const grades = props.grades;
+  if (!grades) {
+    return (
+      <tbody>
+        <tr>
+          <td colSpan="4">No Data Recorded</td>
+        </tr>
+      </tbody>
+    );
+  } else {
+    const tabelItems = grades.map((gradeObject, index) => {
+      return <Grades key={index} index={index + 1} grade={gradeObject} update={props.update} delete={props.delete} />;
+    });
+    return (
+      <tbody>
+        {tabelItems}
+      </tbody>
+    );
+  }
+}
+
 function gradeTable(props) {
+  const tableClass = 'table table-striped';
   return (
-    <table className="table table-striped">
+    <table className={props.isMobile ? `${tableClass} table-sm` : tableClass}>
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -16,28 +39,6 @@ function gradeTable(props) {
       {gradeElements(props)}
     </table>
   );
-}
-
-function gradeElements(props) {
-  const grades = props.grades;
-  if (!grades) {
-    return (
-      <tbody>
-        <tr>
-          <td colSpan="4">No Data Recorded</td>
-        </tr>
-      </tbody>
-    );
-  } else {
-    const tabelItems = grades.map(gradeObject => {
-      return <Grades key={gradeObject.id} grade={gradeObject} update={props.update} delete={props.delete} />;
-    });
-    return (
-      <tbody>
-        {tabelItems}
-      </tbody>
-    );
-  }
 }
 
 export default gradeTable;
