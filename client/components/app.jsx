@@ -24,7 +24,7 @@ class App extends React.Component {
       .then(grades => {
         return this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   getAverageGrade() {
@@ -46,7 +46,7 @@ class App extends React.Component {
         grades.push(newGrade);
         return this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   deleteGrade(event) {
@@ -57,7 +57,7 @@ class App extends React.Component {
         const grades = this.state.grades.filter(index => index.id !== id);
         return this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   studentToUpdate(event) {
@@ -85,7 +85,7 @@ class App extends React.Component {
         grades[indexOfUpdated] = updatedGrade;
         return this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   render() {
