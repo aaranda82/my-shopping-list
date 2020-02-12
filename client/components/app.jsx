@@ -25,9 +25,8 @@ class App extends React.Component {
       .then(grades => {
         this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
     this.screenSizeCheck();
-
   }
 
   componentWillUnmount() {
@@ -57,7 +56,7 @@ class App extends React.Component {
         grades.push(newGrade);
         return this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   deleteGrade(event) {
@@ -71,7 +70,7 @@ class App extends React.Component {
         });
         return this.setState({ grades });
       })
-      .catch(err => { console.error(`Error: ${err}`); });
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   studentToUpdate(event) {
@@ -106,7 +105,7 @@ class App extends React.Component {
         grades[indexOfUpdated] = updatedGrade;
         return this.setState({ grades });
       })
-      .catch(err => console.error(`An error occured: ${err}`));
+      .catch(err => { console.error(`Catch Error: ${err}`); });
   }
 
   render() {
