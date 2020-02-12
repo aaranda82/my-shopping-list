@@ -54,7 +54,7 @@ class GradeForm extends React.Component {
 
   gradeChange(event) {
     const grade = { ...this.state.grade };
-    grade.grade = parseInt(event.target.value);
+    grade.grade = parseInt(event.target.value) ? parseInt(event.target.value) : 0;
     this.setState({ grade });
   }
 
