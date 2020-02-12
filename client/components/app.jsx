@@ -8,19 +8,34 @@ class App extends React.Component {
     super(props);
     this.state = {
       grades: [],
-      gradeToUpdate: {}
+      gradeToUpdate: {},
+      isMobilePortrait: true
     };
     this.newGrade = this.newGrade.bind(this);
     this.deleteGrade = this.deleteGrade.bind(this);
     this.studentToUpdate = this.studentToUpdate.bind(this);
     this.updateGrade = this.updateGrade.bind(this);
+    this.screenSizeCheck = this.screenSizeCheck.bind(this);
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this.screenSizeCheck);
     fetch('/api/grades')
       .then(response => response.json())
-      .then(grades => this.setState({ grades }))
+      .then(grades => {
+        this.setState({ grades });
+      })
       .catch(err => { console.error(`Error: ${err}`); });
+    this.screenSizeCheck();
+
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.screenSizeCheck);
+  }
+
+  screenSizeCheck() {
+    this.setState({ isMobilePortrait: window.innerWidth < 420 });
   }
 
   getAverageGrade() {
@@ -49,8 +64,11 @@ class App extends React.Component {
     const id = parseInt(event.target.id);
     const deleteInit = { method: 'DELETE' };
     fetch(`/api/grades/${id}`, deleteInit)
-      .then(() => {
-        const grades = this.state.grades.filter(index => index.id !== id);
+      .then(response => response.json())
+      .then(deletedGrade => {
+        const grades = this.state.grades.filter(index => {
+          return index.studentid !== deletedGrade.studentid;
+        });
         return this.setState({ grades });
       })
       .catch(err => { console.error(`Error: ${err}`); });
@@ -84,7 +102,7 @@ class App extends React.Component {
       .then(res => res.json())
       .then(updatedGrade => {
         const grades = [...this.state.grades];
-        const indexOfUpdated = grades.findIndex(index => index.id === updatedGrade.id);
+        const indexOfUpdated = grades.findIndex(index => index.studentid === updatedGrade.studentid);
         grades[indexOfUpdated] = updatedGrade;
         return this.setState({ grades });
       })
@@ -102,8 +120,8 @@ class App extends React.Component {
             <div id="gradeForm" className="col-9 col-sm-6 col-lg-4 ml-5 ml-sm-0 pt-5">
               <GradeForm newGrade={this.newGrade} gradeToUpdate={this.state.gradeToUpdate} updateGrade={this.updateGrade} />
             </div>
-            <div id="gradeTable" className="col-12 col-lg-8">
-              <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} />
+            <div id="gradeTable" className="col-12 col-lg-8 mt-5">
+              <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} isMobile={this.state.isMobilePortrait}/>
             </div>
           </div>
         </div>
