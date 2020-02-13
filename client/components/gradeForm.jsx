@@ -73,7 +73,6 @@ class GradeForm extends React.Component {
     }
   }
 
-  // generate inputs dynamically
   render() {
     return (
       <div>
@@ -82,19 +81,19 @@ class GradeForm extends React.Component {
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-user"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.name} onChange={this.studentChange} />
+            <input type="text" className="form-control" value={this.state.grade.name} onChange={this.studentChange} placeholder="Name" />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-list-alt"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.course} onChange={this.courseChange} />
+            <input type="text" className="form-control" value={this.state.grade.course} onChange={this.courseChange} placeholder="Course" required />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-graduation-cap"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} />
+            <input type="text" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} placeholder="Grade" required />
           </div>
         </form>
         <button

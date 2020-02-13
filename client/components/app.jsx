@@ -18,14 +18,15 @@ class App extends React.Component {
     this.screenSizeCheck = this.screenSizeCheck.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener('resize', this.screenSizeCheck);
-    fetch('/api/grades')
-      .then(response => response.json())
-      .then(grades => {
-        this.setState({ grades });
-      })
-      .catch(err => { console.error(`Catch Error: ${err}`); });
+    try {
+      const response = await fetch('/api/grades');
+      const grades = await response.json();
+      this.setState({ grades });
+    } catch (error) {
+      console.error(error);
+    }
     this.screenSizeCheck();
   }
 
@@ -43,34 +44,36 @@ class App extends React.Component {
     return !averageGrade ? 0 : averageGrade.toFixed();
   }
 
-  newGrade(newStudent) {
+  async newGrade(newStudent) {
     const postInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newStudent)
     };
-    fetch('/api/grades', postInit)
-      .then(response => response.json())
-      .then(newGrade => {
-        const grades = [...this.state.grades];
-        grades.push(newGrade);
-        return this.setState({ grades });
-      })
-      .catch(err => { console.error(`Catch Error: ${err}`); });
+    try {
+      const response = await fetch('/api/grades', postInit);
+      const responseJSON = await response.json();
+      if (!response.ok) {
+        throw response;
+      }
+      const grades = [...this.state.grades, responseJSON];
+      this.setState({ grades });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  deleteGrade(event) {
+  async deleteGrade(event) {
     const id = parseInt(event.target.id);
     const deleteInit = { method: 'DELETE' };
-    fetch(`/api/grades/${id}`, deleteInit)
-      .then(response => response.json())
-      .then(deletedGrade => {
-        const grades = this.state.grades.filter(index => {
-          return index.studentid !== deletedGrade.studentid;
-        });
-        return this.setState({ grades });
-      })
-      .catch(err => { console.error(`Catch Error: ${err}`); });
+    try {
+      const response = await fetch(`/api/grades/${id}`, deleteInit);
+      const responseJSON = await response.json();
+      const grades = this.state.grades.filter(index => index.studentid !== parseInt(responseJSON));
+      this.setState({ grades });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   studentToUpdate(event) {
@@ -85,8 +88,7 @@ class App extends React.Component {
     });
   }
 
-  updateGrade(grade) {
-
+  async updateGrade(grade) {
     const updateInit = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -97,15 +99,19 @@ class App extends React.Component {
       })
     };
     const id = parseInt(grade.id);
-    fetch(`/api/grades/${id}`, updateInit)
-      .then(res => res.json())
-      .then(updatedGrade => {
-        const grades = [...this.state.grades];
-        const indexOfUpdated = grades.findIndex(index => index.studentid === updatedGrade.studentid);
-        grades[indexOfUpdated] = updatedGrade;
-        return this.setState({ grades });
-      })
-      .catch(err => { console.error(`Catch Error: ${err}`); });
+    try {
+      const response = await fetch(`/api/grades/${id}`, updateInit);
+      const responseJSON = await response.json();
+      if (!response.ok) {
+        throw response;
+      }
+      const grades = [...this.state.grades];
+      const indexOfUpdated = grades.findIndex(index => index.studentid === responseJSON.studentid);
+      grades[indexOfUpdated] = responseJSON;
+      this.setState({ grades });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
@@ -120,7 +126,7 @@ class App extends React.Component {
               <GradeForm newGrade={this.newGrade} gradeToUpdate={this.state.gradeToUpdate} updateGrade={this.updateGrade} />
             </div>
             <div id="gradeTable" className="col-12 col-lg-8 mt-5">
-              <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} isMobile={this.state.isMobilePortrait}/>
+              <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} isMobile={this.state.isMobilePortrait} />
             </div>
           </div>
         </div>
