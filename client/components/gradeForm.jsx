@@ -81,7 +81,7 @@ class GradeForm extends React.Component {
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-user"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.name} onChange={this.studentChange} placeholder="Name" />
+            <input type="text" className="form-control" value={this.state.grade.name} onChange={this.studentChange} placeholder="Name" required />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
@@ -95,14 +95,14 @@ class GradeForm extends React.Component {
             </div>
             <input type="text" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} placeholder="Grade" required />
           </div>
+          <button
+            type="submit"
+            className={this.state.addOrUpdate === 'ADD' ? 'btn btn-primary m-1' : 'btn btn-success m-1'}
+            onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate}>
+            {this.state.addOrUpdate}
+          </button>
+          <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
         </form>
-        <button
-          type="button"
-          className={this.state.addOrUpdate === 'ADD' ? 'btn btn-primary m-1' : 'btn btn-success m-1'}
-          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate}>
-          {this.state.addOrUpdate}
-        </button>
-        <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
       </div>
     );
   }
