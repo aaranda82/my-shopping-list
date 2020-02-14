@@ -88,7 +88,7 @@ app.put('/api/grades/:id', async (req, res, next) => {
   }
 });
 
-app.listen(3001, () => {
+app.listen(3002, () => {
   // eslint-disable-next-line no-console
-  console.log('Express Server Listening on Port 3001!');
+  console.log('Express Server Listening on Port 3002');
 });
