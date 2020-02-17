@@ -8,6 +8,7 @@ var knex = require('knex')({
 });
 
 app.get('/api/health-check', (req, res, next) => {
+  console.log('***here')
   db.query('select \'successfully connected\' as "message"')
     .then(result => res.json(result.rows[0]))
     .catch(err => next(err));
@@ -16,6 +17,7 @@ app.get('/api/health-check', (req, res, next) => {
 app.get('/api/grades', async (req, res, next) => {
   try {
     const grades = await knex('students').join('course', 'course.courseid', '=', 'students.courseid');
+    console.log(grades)
     res.json(grades);
   } catch (error) {
     console.error(error);
