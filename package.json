@@ -6,7 +6,6 @@
   "scripts": {
     "client": "webpack-dev-server",
     "server": "nodemon server/index.js",
-    "start": "node server/index.js",
     "db:import": "source .env; psql $DATABASE_URL < database/dump.sql",
     "db:export": "source .env; pg_dump -c -O $DATABASE_URL > database/dump.sql",
     "build": "webpack --mode=production",
