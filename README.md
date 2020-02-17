@@ -4,13 +4,13 @@ A web application written in React with an Express server, and styled with boots
 
 ## Features
 
-- [User can view all grades.]
-- [User can view the average grade.]
-- [User can add a grade.]
-- [User can delete a grade.]
-- [User can update a grade.]
+- User can view all grades.
+- User can view the average grade.
+- User can add a grade.
+- User can delete a grade.
+- User can update a grade.
 
 ## Preview
 
-![SGT React](sgt-react.gif)
+![SGT React](SGT_preview.png)
 

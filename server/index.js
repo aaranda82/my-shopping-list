@@ -7,17 +7,18 @@ var knex = require('knex')({
   connection: process.env.DATABASE_URL
 });
 
-app.get('/api/health-check', (req, res, next) => {
-  console.log('***here');
-  db.query('select \'successfully connected\' as "message"')
-    .then(result => res.json(result.rows[0]))
-    .catch(err => next(err));
+app.get('/api/health-check', (req, res) => {
+  try {
+    db.query('select \'successfully connected\' as "message"')
+      .then(result => res.json(result.rows[0]))
+  } catch (error) {
+    console.error(error)
+  }
 });
 
-app.get('/api/grades', async (req, res, next) => {
+app.get('/api/grades', async (req, res) => {
   try {
     const grades = await knex('students').join('course', 'course.courseid', '=', 'students.courseid');
-    console.log(grades);
     res.json(grades);
   } catch (error) {
     console.error(error);
@@ -26,7 +27,7 @@ app.get('/api/grades', async (req, res, next) => {
 
 app.use(express.json());
 
-app.post('/api/grades', async (req, res, next) => {
+app.post('/api/grades', async (req, res) => {
   let { name, course, grade } = req.body;
   grade = parseInt(grade);
   try {
@@ -54,7 +55,7 @@ app.post('/api/grades', async (req, res, next) => {
   }
 });
 
-app.delete('/api/grades/:id', async (req, res, next) => {
+app.delete('/api/grades/:id', async (req, res) => {
   try {
     const studentToDelete = await knex('students').where('studentid', '=', req.params.id).del();
     res.json(req.params.id);
@@ -63,7 +64,7 @@ app.delete('/api/grades/:id', async (req, res, next) => {
   }
 });
 
-app.put('/api/grades/:id', async (req, res, next) => {
+app.put('/api/grades/:id', async (req, res) => {
   let { name, course, grade } = req.body;
   grade = parseInt(grade);
   const id = req.params.id;
