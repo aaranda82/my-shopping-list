@@ -10,9 +10,9 @@ var knex = require('knex')({
 app.get('/api/health-check', (req, res) => {
   try {
     db.query('select \'successfully connected\' as "message"')
-      .then(result => res.json(result.rows[0]))
+      .then(result => res.json(result.rows[0]));
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 });
 

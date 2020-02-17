@@ -1,4 +1,4 @@
-# sgt-react
+# Student Grade Table
 
 A web application written in React with an Express server, and styled with bootstrap, to allow the user to keep track of and update student grades.
 
