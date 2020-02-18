@@ -36,7 +36,7 @@ class App extends React.Component {
 
   screenSizeCheck() {
     this.setState({ isMobilePortrait: window.innerWidth < 420 });
-    console.log(window.innerWidth)
+    console.log(window.innerWidth);
   }
 
   getAverageGrade() {
