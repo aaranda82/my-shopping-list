@@ -20,8 +20,11 @@ class GradeForm extends React.Component {
   }
 
   handleAdd() {
-    this.props.newGrade(this.state.grade);
-    this.handleCancel();
+    const { name, course, grade } = this.state.grade;
+    if (name && course && grade) {
+      this.props.newGrade(this.state.grade);
+      this.handleCancel();
+    }
   }
 
   handleUpdate() {
@@ -53,9 +56,11 @@ class GradeForm extends React.Component {
   }
 
   gradeChange(event) {
-    const grade = { ...this.state.grade };
-    grade.grade = parseInt(event.target.value) ? parseInt(event.target.value) : 0;
-    this.setState({ grade });
+    if (event.target.value >= 0 && event.target.value <= 100) {
+      const grade = { ...this.state.grade };
+      grade.grade = event.target.value;
+      this.setState({ grade });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -93,7 +98,7 @@ class GradeForm extends React.Component {
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-graduation-cap"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} placeholder="Grade" required />
+            <input type="number" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} placeholder="Grade" required />
           </div>
           <button
             type="submit"
