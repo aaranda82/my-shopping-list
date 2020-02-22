@@ -113,7 +113,7 @@ class App extends React.Component {
       <>
         <div id="gradeArea" className="container">
           <div className="row">
-            <div id="header" className="col-12 col-sm-6 col-lg-12">
+            <div id="header" className="col-12 col-sm-6 mt-3 col-lg-12">
               <Header />
             </div>
             <div id="gradeForm" className="col-9 col-sm-6 col-lg-4 ml-5 ml-sm-0 pt-5">

@@ -32,7 +32,7 @@ function ItemTable(props) {
           <th scope="col">#</th>
           <th scope="col">Item</th>
           <th scope="col">Category</th>
-          <th scope="col">Quantity</th>
+          <th scope="col">Qty</th>
           <th scope="col" className="text-center">Operations</th>
         </tr>
       </thead>

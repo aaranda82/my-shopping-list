@@ -80,35 +80,27 @@ class ItemForm extends React.Component {
 
   render() {
     return (
-      <div>
-        <form>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <div className="input-group-text"><i className="fas fa-user"></i></div>
-            </div>
-            <input type="text" className="form-control" value={this.state.item.item} onChange={this.studentChange} placeholder="Item" required />
-          </div>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <div className="input-group-text"><i className="fas fa-list-alt"></i></div>
-            </div>
-            <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} placeholder="Category" required />
-          </div>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <div className="input-group-text"><i className="fas fa-graduation-cap"></i></div>
-            </div>
-            <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} placeholder="Quantity" required />
-          </div>
-          <button
-            type="submit"
-            className={this.state.addOrUpdate === 'ADD' ? 'btn btn-primary m-1' : 'btn btn-success m-1'}
-            onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate}>
-            {this.state.addOrUpdate}
-          </button>
-          <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
-        </form>
-      </div>
+      <form>
+        <div className="form-group">
+          <label htmlFor="Item">Item</label>
+          <input type="text" className="form-control" value={this.state.item.item} onChange={this.studentChange} required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Category">Category</label>
+          <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Item">Quantity</label>
+          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} required />
+        </div>
+        <button
+          type="submit"
+          className={this.state.addOrUpdate === 'ADD' ? 'btn btn-primary m-1' : 'btn btn-success m-1'}
+          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate}>
+          {this.state.addOrUpdate}
+        </button>
+        <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
+      </form>
     );
   }
 }
