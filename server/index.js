@@ -16,10 +16,10 @@ app.get('/api/health-check', (req, res) => {
   }
 });
 
-app.get('/api/grades', async (req, res) => {
+app.get('/api/items', async (req, res) => {
   try {
-    const grades = await knex('students').join('course', 'course.courseid', '=', 'students.courseid');
-    res.json(grades);
+    const items = await knex('items').join('category', 'category.categoryid', '=', 'items.categoryid');
+    res.json(items);
   } catch (error) {
     console.error(error);
   }
@@ -27,65 +27,65 @@ app.get('/api/grades', async (req, res) => {
 
 app.use(express.json());
 
-app.post('/api/grades', async (req, res) => {
-  let { name, course, grade } = req.body;
-  grade = parseInt(grade);
+app.post('/api/items', async (req, res) => {
+  let { item, category, quantity } = req.body;
+  quantity = parseInt(quantity);
   try {
-    const courseSearchId = await knex('course').select('courseid').where('course', '=', course);
-    if (courseSearchId.length === 0) {
-      const courseInsertId = await knex('course').insert({ course: course }, 'courseid');
-      const studentInsert = await knex('students').insert({
-        name,
-        courseid: courseInsertId[0],
-        grade
-      }, 'studentid');
-      const studentSearch = await knex('students').join('course', 'course.courseid', '=', 'students.courseid').where('studentid', '=', studentInsert[0]);
-      res.json(studentSearch[0]);
+    const categorySearchId = await knex('category').select('categoryid').where('category', '=', category);
+    if (categorySearchId.length === 0) {
+      const categoryInsertId = await knex('category').insert({ category: category }, 'categoryid');
+      const itemInsert = await knex('items').insert({
+        item,
+        categoryid: categoryInsertId[0],
+        quantity
+      }, 'itemid');
+      const itemSearch = await knex('items').join('category', 'category.categoryid', '=', 'items.categoryid').where('itemid', '=', itemInsert[0]);
+      res.json(itemSearch[0]);
     } else {
-      const studentInsert = await knex('students').insert({
-        name,
-        courseid: courseSearchId[0].courseid,
-        grade
-      }, 'studentid');
-      const studentSearch = await knex('students').join('course', 'course.courseid', '=', 'students.courseid').where('studentid', '=', studentInsert[0]);
-      res.json(studentSearch[0]);
+      const itemInsert = await knex('items').insert({
+        item,
+        categoryid: categorySearchId[0].categoryid,
+        quantity
+      }, 'itemid');
+      const itemSearch = await knex('items').join('category', 'category.categoryid', '=', 'items.categoryid').where('itemid', '=', itemInsert[0]);
+      res.json(itemSearch[0]);
     }
   } catch (error) {
     console.error(error);
   }
 });
 
-app.delete('/api/grades/:id', async (req, res) => {
+app.delete('/api/items/:id', async (req, res) => {
   try {
-    const studentToDelete = await knex('students').where('studentid', '=', req.params.id).del();
+    const itemToDelete = await knex('items').where('itemid', '=', req.params.id).del();
     res.json(req.params.id);
   } catch (error) {
     console.error(error);
   }
 });
 
-app.put('/api/grades/:id', async (req, res) => {
-  let { name, course, grade } = req.body;
-  grade = parseInt(grade);
+app.put('/api/items/:id', async (req, res) => {
+  let { item, category, quantity } = req.body;
+  quantity = parseInt(quantity);
   const id = req.params.id;
   try {
-    const courseSearchId = await knex('course').select('courseid').where('course', '=', course);
-    if (courseSearchId.length === 0) {
-      const courseInsertId = await knex('course').insert({ course: course }, 'courseid');
-      const studentToUpdate = await knex('students').where('studentid', '=', id).update({
-        name,
-        grade,
-        courseid: courseInsertId[0]
+    const categorySearchId = await knex('category').select('categoryid').where('category', '=', category);
+    if (categorySearchId.length === 0) {
+      const categoryInsertId = await knex('category').insert({ category }, 'categoryid');
+      const itemToUpdate = await knex('items').where('itemid', '=', id).update({
+        item,
+        quantity,
+        categoryid: categoryInsertId[0]
       });
     } else {
-      const studentToUpdate = await knex('students').where('studentid', '=', id).update({
-        name,
-        grade,
-        courseid: courseSearchId[0].courseid
+      const itemToUpdate = await knex('items').where('itemid', '=', id).update({
+        item,
+        quantity,
+        categoryid: categorySearchId[0].categoryid
       });
     }
-    const studentSearch = await knex('students').join('course', 'course.courseid', '=', 'students.courseid').where('studentid', '=', id);
-    res.json(studentSearch[0]);
+    const itemSearch = await knex('items').join('category', 'category.categoryid', '=', 'items.categoryid').where('itemid', '=', id);
+    res.json(itemSearch[0]);
   } catch (error) {
     console.error(error);
   }

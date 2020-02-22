@@ -1,29 +1,29 @@
 import React from 'react';
-import GradeTable from './gradeTable';
+import ItemTable from './itemTable';
 import Header from './header';
-import GradeForm from './gradeForm';
+import ItemForm from './itemForm';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grades: [],
-      gradeToUpdate: {},
+      itemsToBuy: [],
+      itemToUpdate: {},
       isMobilePortrait: true
     };
-    this.newGrade = this.newGrade.bind(this);
-    this.deleteGrade = this.deleteGrade.bind(this);
-    this.studentToUpdate = this.studentToUpdate.bind(this);
-    this.updateGrade = this.updateGrade.bind(this);
+    this.newItem = this.newItem.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.itemToUpdate = this.itemToUpdate.bind(this);
+    this.updateItem = this.updateItem.bind(this);
     this.screenSizeCheck = this.screenSizeCheck.bind(this);
   }
 
   async componentDidMount() {
     window.addEventListener('resize', this.screenSizeCheck);
     try {
-      const response = await fetch('/api/grades');
-      const grades = await response.json();
-      this.setState({ grades });
+      const response = await fetch('/api/items');
+      const itemsToBuy = await response.json();
+      this.setState({ itemsToBuy });
     } catch (error) {
       console.error(error);
     }
@@ -38,77 +38,71 @@ class App extends React.Component {
     this.setState({ isMobilePortrait: window.innerWidth < 450 });
   }
 
-  getAverageGrade() {
-    const gradeTotal = this.state.grades.reduce((acc, cur) => acc + parseInt(cur.grade), 0);
-    const averageGrade = gradeTotal / this.state.grades.length;
-    return !averageGrade ? 0 : averageGrade.toFixed();
-  }
-
-  async newGrade(newStudent) {
+  async newItem(newItem) {
     const postInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newStudent)
+      body: JSON.stringify(newItem)
     };
     try {
-      const response = await fetch('/api/grades', postInit);
+      const response = await fetch('/api/items', postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
       }
-      const grades = [...this.state.grades, responseJSON];
-      this.setState({ grades });
+      const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
+      this.setState({ itemsToBuy });
     } catch (error) {
       console.error(error);
     }
   }
 
-  async deleteGrade(event) {
+  async deleteItem(event) {
     const id = parseInt(event.target.id);
     const deleteInit = { method: 'DELETE' };
     try {
-      const response = await fetch(`/api/grades/${id}`, deleteInit);
+      const response = await fetch(`/api/items/${id}`, deleteInit);
       const responseJSON = await response.json();
-      const grades = this.state.grades.filter(index => index.studentid !== parseInt(responseJSON));
-      this.setState({ grades });
+      const itemsToBuy = this.state.itemsToBuy.filter(index => index.itemid !== parseInt(responseJSON));
+      this.setState({ itemsToBuy });
     } catch (error) {
       console.error(error);
     }
   }
 
-  studentToUpdate(event) {
+  itemToUpdate(event) {
     const { name, title, value, id } = event.target;
     this.setState({
-      gradeToUpdate: {
+      itemToUpdate: {
         name,
-        course: title,
-        grade: value,
+        category: title,
+        quantity: value,
         id
       }
     });
   }
 
-  async updateGrade(grade) {
+  async updateItem(item) {
     const updateInit = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        course: grade.course,
-        name: grade.name,
-        grade: parseInt(grade.grade)
+        category: item.category,
+        item: item.item,
+        quantity: item.quantity
       })
     };
-    const id = parseInt(grade.id);
+    const id = parseInt(item.id);
     try {
-      const response = await fetch(`/api/grades/${id}`, updateInit);
+      const response = await fetch(`/api/items/${id}`, updateInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
       }
-      const grades = [...this.state.grades];
-      const indexOfUpdated = grades.findIndex(index => index.studentid === responseJSON.studentid);
-      grades[indexOfUpdated] = responseJSON;
-      this.setState({ grades });
+      const itemsToBuy = [...this.state.itemsToBuy];
+      const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === responseJSON.itemid);
+      itemsToBuy[indexOfUpdated] = responseJSON;
+      this.setState({ itemsToBuy });
     } catch (error) {
       console.error(error);
     }
@@ -119,14 +113,14 @@ class App extends React.Component {
       <>
         <div id="gradeArea" className="container">
           <div className="row">
-            <div id="header" className="col-12 col-sm-6 col-lg-12">
-              <Header average={this.getAverageGrade()} />
+            <div id="header" className="col-12 col-sm-6 mt-3 col-lg-12">
+              <Header />
             </div>
             <div id="gradeForm" className="col-9 col-sm-6 col-lg-4 ml-5 ml-sm-0 pt-5">
-              <GradeForm newGrade={this.newGrade} gradeToUpdate={this.state.gradeToUpdate} updateGrade={this.updateGrade} />
+              <ItemForm newItem={this.newItem} itemToUpdate={this.state.itemToUpdate} updateItem={this.updateItem} />
             </div>
             <div id="gradeTable" className="col-12 col-lg-8 mt-5">
-              <GradeTable grades={this.state.grades} delete={this.deleteGrade} update={this.studentToUpdate} isMobile={this.state.isMobilePortrait} />
+              <ItemTable itemsToBuy={this.state.itemsToBuy} delete={this.deleteItem} update={this.itemToUpdate} isMobile={this.state.isMobilePortrait} />
             </div>
           </div>
         </div>
