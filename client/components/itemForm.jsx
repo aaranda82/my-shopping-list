@@ -1,76 +1,76 @@
 import React from 'react';
 
-class GradeForm extends React.Component {
+class ItemForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleAdd = this.handleAdd.bind(this);
     this.state = {
-      grade: {
-        name: '',
-        course: '',
-        grade: ''
+      item: {
+        item: '',
+        category: '',
+        quantity: ''
       },
       addOrUpdate: 'ADD'
     };
     this.studentChange = this.studentChange.bind(this);
-    this.courseChange = this.courseChange.bind(this);
-    this.gradeChange = this.gradeChange.bind(this);
+    this.categoryChange = this.categoryChange.bind(this);
+    this.quantityChange = this.quantityChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   handleAdd() {
-    const { name, course, grade } = this.state.grade;
-    if (name && course && grade) {
-      this.props.newGrade(this.state.grade);
+    const { item, category, quantity } = this.state.item;
+    if (item && category && quantity) {
+      this.props.newItem(this.state.item);
       this.handleCancel();
     }
   }
 
   handleUpdate() {
-    this.props.updateGrade(this.state.grade);
+    this.props.updateItem(this.state.item);
     this.handleCancel();
   }
 
   handleCancel() {
     this.setState({
-      grade: {
-        name: '',
-        course: '',
-        grade: ''
+      item: {
+        item: '',
+        category: '',
+        quantity: ''
       },
       addOrUpdate: 'ADD'
     });
   }
 
   studentChange(event) {
-    const grade = { ...this.state.grade };
-    grade.name = event.target.value;
-    this.setState({ grade });
+    const item = { ...this.state.item };
+    item.item = event.target.value;
+    this.setState({ item });
   }
 
-  courseChange(event) {
-    const grade = { ...this.state.grade };
-    grade.course = event.target.value;
-    this.setState({ grade });
+  categoryChange(event) {
+    const item = { ...this.state.item };
+    item.category = event.target.value;
+    this.setState({ item });
   }
 
-  gradeChange(event) {
+  quantityChange(event) {
     if (event.target.value >= 0 && event.target.value <= 100) {
-      const grade = { ...this.state.grade };
-      grade.grade = event.target.value;
-      this.setState({ grade });
+      const item = { ...this.state.item };
+      item.quantity = event.target.value;
+      this.setState({ item });
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { name, course, grade, id } = this.props.gradeToUpdate;
-    if (this.props.gradeToUpdate !== prevProps.gradeToUpdate) {
+    const { name, category, quantity, id } = this.props.itemToUpdate;
+    if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
       this.setState({
-        grade: {
-          name: name,
-          course: course,
-          grade: grade,
+        item: {
+          item: name,
+          category,
+          quantity,
           id: parseInt(id)
         },
         addOrUpdate: 'UPDATE'
@@ -86,19 +86,19 @@ class GradeForm extends React.Component {
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-user"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.name} onChange={this.studentChange} placeholder="Name" required />
+            <input type="text" className="form-control" value={this.state.item.item} onChange={this.studentChange} placeholder="Item" required />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-list-alt"></i></div>
             </div>
-            <input type="text" className="form-control" value={this.state.grade.course} onChange={this.courseChange} placeholder="Course" required />
+            <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} placeholder="Category" required />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <div className="input-group-text"><i className="fas fa-graduation-cap"></i></div>
             </div>
-            <input type="number" className="form-control" value={this.state.grade.grade} onChange={this.gradeChange} placeholder="Grade" required />
+            <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} placeholder="Quantity" required />
           </div>
           <button
             type="submit"
@@ -113,4 +113,4 @@ class GradeForm extends React.Component {
   }
 }
 
-export default GradeForm;
+export default ItemForm;

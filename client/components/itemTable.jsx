@@ -1,9 +1,9 @@
 import React from 'react';
-import Grades from './grade';
+import Items from './item';
 
-function gradeElements(props) {
-  const grades = props.grades;
-  if (!grades) {
+function itemElements(props) {
+  const itemsToBuy = props.itemsToBuy;
+  if (!itemsToBuy) {
     return (
       <tbody>
         <tr>
@@ -12,8 +12,8 @@ function gradeElements(props) {
       </tbody>
     );
   } else {
-    const tabelItems = grades.map((gradeObject, index) => {
-      return <Grades key={index} index={index + 1} grade={gradeObject} update={props.update} delete={props.delete} />;
+    const tabelItems = itemsToBuy.map((itemObj, index) => {
+      return <Items key={index} index={index + 1} item={itemObj} update={props.update} delete={props.delete} />;
     });
     return (
       <tbody>
@@ -23,22 +23,22 @@ function gradeElements(props) {
   }
 }
 
-function gradeTable(props) {
+function ItemTable(props) {
   const tableClass = 'table table-striped';
   return (
     <table className={props.isMobile ? `${tableClass} table-sm` : tableClass}>
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Name</th>
-          <th scope="col">Course</th>
-          <th scope="col">Grade</th>
+          <th scope="col">Item</th>
+          <th scope="col">Category</th>
+          <th scope="col">Quantity</th>
           <th scope="col" className="text-center">Operations</th>
         </tr>
       </thead>
-      {gradeElements(props)}
+      {itemElements(props)}
     </table>
   );
 }
 
-export default gradeTable;
+export default ItemTable;
