@@ -10,18 +10,25 @@ class ItemForm extends React.Component {
         category: '',
         quantity: ''
       },
-      addOrUpdate: 'ADD'
+      addOrUpdate: 'ADD',
+      itemError: '',
+      categoryError: '',
+      quantityError: ''
     };
-    this.studentChange = this.studentChange.bind(this);
+    this.itemChange = this.itemChange.bind(this);
     this.categoryChange = this.categoryChange.bind(this);
     this.quantityChange = this.quantityChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.validateItem = this.validateItem.bind(this);
+    this.validateCategory = this.validateCategory.bind(this);
+    this.validateQuantity = this.validateQuantity.bind(this);
   }
 
-  handleAdd() {
-    const { item, category, quantity } = this.state.item;
-    if (item && category && quantity) {
+  handleAdd(event) {
+    event.preventDefault();
+    const { itemError, categoryError, quantityError } = this.state;
+    if (!itemError || !categoryError || !quantityError) {
       this.props.newItem(this.state.item);
       this.handleCancel();
     }
@@ -43,16 +50,44 @@ class ItemForm extends React.Component {
     });
   }
 
-  studentChange(event) {
-    const item = { ...this.state.item };
-    item.item = event.target.value;
-    this.setState({ item });
+  itemChange(event) {
+    if (event.target.value.length > 65) {
+      return false;
+    } else {
+      const item = { ...this.state.item };
+      item.item = event.target.value;
+      this.setState({ item });
+    }
+  }
+
+  validateItem(event) {
+    event.preventDefault();
+    const item = event.target.value;
+    let itemError = '';
+    if (!item) {
+      itemError = 'Please Enter Item';
+    }
+    this.setState({ itemError });
   }
 
   categoryChange(event) {
-    const item = { ...this.state.item };
-    item.category = event.target.value;
-    this.setState({ item });
+    if (event.target.value.length > 25) {
+      return false;
+    } else {
+      const item = { ...this.state.item };
+      item.category = event.target.value;
+      this.setState({ item });
+    }
+  }
+
+  validateCategory(event) {
+    event.preventDefault();
+    const category = event.target.value;
+    let categoryError = '';
+    if (!category) {
+      categoryError = 'Please Enter Item';
+    }
+    this.setState({ categoryError });
   }
 
   quantityChange(event) {
@@ -61,6 +96,16 @@ class ItemForm extends React.Component {
       item.quantity = event.target.value;
       this.setState({ item });
     }
+  }
+
+  validateQuantity(event) {
+    event.preventDefault();
+    const quantity = event.target.value;
+    let quantityError = '';
+    if (!quantity) {
+      quantityError = 'Please Enter Item';
+    }
+    this.setState({ quantityError });
   }
 
   componentDidUpdate(prevProps) {
@@ -80,18 +125,21 @@ class ItemForm extends React.Component {
 
   render() {
     return (
-      <form>
+      <form className="needs-validation" noValidate>
         <div className="form-group">
           <label htmlFor="Item">Item</label>
-          <input type="text" className="form-control" value={this.state.item.item} onChange={this.studentChange} required />
+          <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} required />
+          <div className="text-danger">{this.state.itemError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Category">Category</label>
-          <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} required />
+          <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} onBlur={this.validateCategory} required />
+          <div className="text-danger">{this.state.categoryError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Item">Quantity</label>
-          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} required />
+          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} required />
+          <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button
           type="submit"
