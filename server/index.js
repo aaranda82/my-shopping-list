@@ -27,6 +27,17 @@ app.get('/api/items', async (req, res) => {
 
 app.use(express.json());
 
+app.get('/api/items/:category', async (req, res) => {
+  const category = req.params.category;
+  try {
+    const categorySearchId = await knex('category').select('categoryid').where('category', '=', category);
+    const itemSearch = await knex('items').where('categoryid', '=', categorySearchId[0].categoryid);
+    res.json(itemSearch);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 app.post('/api/items', async (req, res) => {
   let { item, category, quantity } = req.body;
   quantity = parseInt(quantity);

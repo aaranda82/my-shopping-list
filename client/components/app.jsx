@@ -2,6 +2,7 @@ import React from 'react';
 import ItemTable from './itemTable';
 import Header from './header';
 import ItemForm from './itemForm';
+import ListByCategory from './listByCategory';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,13 +10,18 @@ class App extends React.Component {
     this.state = {
       itemsToBuy: [],
       itemToUpdate: {},
-      isMobilePortrait: true
+      isMobilePortrait: true,
+      view: {
+        name: 'shoppingList',
+        category: ''
+      }
     };
     this.newItem = this.newItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.itemToUpdate = this.itemToUpdate.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.screenSizeCheck = this.screenSizeCheck.bind(this);
+    this.setView = this.setView.bind(this);
   }
 
   async componentDidMount() {
@@ -108,24 +114,60 @@ class App extends React.Component {
     }
   }
 
-  render() {
-    return (
+  setView(name, category) {
+    const view = {
+      name,
+      category
+    };
+    this.setState({ view });
+  }
+
+  handleRender() {
+    let domView = null;
+    const shoppingListView = (
       <>
-        <div id="gradeArea" className="container">
+        <Header />
+        <div className="container">
           <div className="row">
-            <div id="header" className="col-12 col-sm-6 mt-3 col-lg-12">
-              <Header />
+            <div id="itemForm" className="col-12">
+              <ItemForm newItem={this.newItem}
+                itemToUpdate={this.state.itemToUpdate}
+                updateItem={this.updateItem} />
             </div>
-            <div id="gradeForm" className="col-9 col-sm-6 col-lg-4 ml-5 ml-sm-0 pt-5">
-              <ItemForm newItem={this.newItem} itemToUpdate={this.state.itemToUpdate} updateItem={this.updateItem} />
-            </div>
-            <div id="gradeTable" className="col-12 col-lg-8 mt-5">
-              <ItemTable itemsToBuy={this.state.itemsToBuy} delete={this.deleteItem} update={this.itemToUpdate} isMobile={this.state.isMobilePortrait} />
+            <div id="itemTable" className="col-12">
+              <ItemTable itemsToBuy={this.state.itemsToBuy}
+                delete={this.deleteItem}
+                update={this.itemToUpdate}
+                isMobile={this.state.isMobilePortrait}
+                setView={this.setView} />
             </div>
           </div>
         </div>
       </>
     );
+    const categoryView = (
+      <>
+        <Header />
+        <div className="container">
+          <div className="row">
+            <ListByCategory category={this.state.view.category} setView={this.setView} />
+          </div>
+        </div>
+      </>
+    );
+    switch (this.state.view.name) {
+      case 'shoppingList':
+        domView = shoppingListView;
+        break;
+      case 'category':
+        domView = categoryView;
+        break;
+    }
+    return domView;
+  }
+
+  render() {
+    return this.handleRender();
   }
 }
 

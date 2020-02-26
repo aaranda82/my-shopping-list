@@ -6,7 +6,7 @@ function Items(props) {
     <tr>
       <th className="align-middle" scope="row">{props.index}</th>
       <td className="align-middle">{item.item}</td>
-      <td className="align-middle">{item.category}</td>
+      <td className="align-middle cursor-pointer" onClick={() => props.setView('category', item.category)} >{item.category}</td>
       <td className="align-middle">{item.quantity}</td>
       <td className="text-center">
         <button type="button" className="btn btn-danger m-1" id={item.itemid} onClick={props.delete}>Delete</button>

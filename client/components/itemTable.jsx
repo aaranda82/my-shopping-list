@@ -13,7 +13,7 @@ function itemElements(props) {
     );
   } else {
     const tabelItems = itemsToBuy.map((itemObj, index) => {
-      return <Items key={index} index={index + 1} item={itemObj} update={props.update} delete={props.delete} />;
+      return <Items key={index} index={index + 1} item={itemObj} update={props.update} delete={props.delete} setView={props.setView} />;
     });
     return (
       <tbody>

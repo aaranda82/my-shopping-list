@@ -28,7 +28,20 @@ class ItemForm extends React.Component {
   handleAdd(event) {
     event.preventDefault();
     const { itemError, categoryError, quantityError } = this.state;
-    if (!itemError || !categoryError || !quantityError) {
+    const { item, category, quantity } = this.state.item;
+    if (!item && !category && !quantity) {
+      this.setState({
+        itemError: 'Please Add Item',
+        categoryError: 'Please Add Category',
+        quantityError: 'Please Add Quantity'
+      });
+    } else if (!item) {
+      this.setState({ itemError: 'Please Add Item' });
+    } else if (!category) {
+      this.setState({ categoryError: 'Please Add Category' });
+    } else if (!quantity) {
+      this.setState({ quantityError: 'Please Add Quantity' });
+    } else if (!itemError || !categoryError || !quantityError) {
       this.props.newItem(this.state.item);
       this.handleCancel();
     }
@@ -46,7 +59,10 @@ class ItemForm extends React.Component {
         category: '',
         quantity: ''
       },
-      addOrUpdate: 'ADD'
+      addOrUpdate: 'ADD',
+      itemError: '',
+      categoryError: '',
+      quantityError: ''
     });
   }
 
@@ -56,7 +72,10 @@ class ItemForm extends React.Component {
     } else {
       const item = { ...this.state.item };
       item.item = event.target.value;
-      this.setState({ item });
+      this.setState({
+        item,
+        itemError: ''
+      });
     }
   }
 
@@ -76,7 +95,10 @@ class ItemForm extends React.Component {
     } else {
       const item = { ...this.state.item };
       item.category = event.target.value;
-      this.setState({ item });
+      this.setState({
+        item,
+        categoryError: ''
+      });
     }
   }
 
@@ -85,7 +107,7 @@ class ItemForm extends React.Component {
     const category = event.target.value;
     let categoryError = '';
     if (!category) {
-      categoryError = 'Please Enter Item';
+      categoryError = 'Please Enter Category';
     }
     this.setState({ categoryError });
   }
@@ -94,7 +116,10 @@ class ItemForm extends React.Component {
     if (event.target.value >= 0 && event.target.value <= 100) {
       const item = { ...this.state.item };
       item.quantity = event.target.value;
-      this.setState({ item });
+      this.setState({
+        item,
+        quantityError: ''
+      });
     }
   }
 
@@ -103,9 +128,22 @@ class ItemForm extends React.Component {
     const quantity = event.target.value;
     let quantityError = '';
     if (!quantity) {
-      quantityError = 'Please Enter Item';
+      quantityError = 'Please Enter Quantity';
     }
     this.setState({ quantityError });
+  }
+
+  handleAddButtonClass() {
+    const { item, category, quantity } = this.state.item;
+    if (this.state.addOrUpdate === 'ADD') {
+      if (item && category && quantity) {
+        return 'btn-primary';
+      } else {
+        return 'btn-secondary';
+      }
+    } else {
+      return 'btn-success';
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -128,23 +166,23 @@ class ItemForm extends React.Component {
       <form className="needs-validation" noValidate>
         <div className="form-group">
           <label htmlFor="Item">Item</label>
-          <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} required />
+          <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Category">Category</label>
-          <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} onBlur={this.validateCategory} required />
+          <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} onBlur={this.validateCategory} />
           <div className="text-danger">{this.state.categoryError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Item">Quantity</label>
-          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} required />
+          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button
           type="submit"
-          className={this.state.addOrUpdate === 'ADD' ? 'btn btn-primary m-1' : 'btn btn-success m-1'}
-          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate}>
+          className={`btn m-1 ${this.handleAddButtonClass()}`}
+          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate} >
           {this.state.addOrUpdate}
         </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
