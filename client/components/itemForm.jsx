@@ -42,7 +42,7 @@ class ItemForm extends React.Component {
     } else if (!quantity) {
       this.setState({ quantityError: 'Please Add Quantity' });
     } else if (!itemError || !categoryError || !quantityError) {
-      this.setState({ isLoading: true })
+      this.setState({ isLoading: true });
       this.props.newItem(this.state.item);
       this.handleCancel();
     }
@@ -148,16 +148,16 @@ class ItemForm extends React.Component {
   }
 
   handleAddButtonText() {
-    const className = this.handleAddButtonClass()
+    const className = this.handleAddButtonClass();
     switch (className) {
       case 'btn-primary':
-        return 'ADD'
+        return 'ADD';
         break;
       case 'btn-secondary':
-        return 'ENTER ITEM INFO'
+        return 'ENTER ITEM INFO';
         break;
       case 'btn-success':
-        return 'UPDATE'
+        return 'UPDATE';
         break;
     }
   }
