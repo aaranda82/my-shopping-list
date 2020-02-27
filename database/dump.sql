@@ -16,15 +16,39 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+ALTER TABLE ONLY public.items DROP CONSTRAINT students_pkey;
+ALTER TABLE ONLY public.category DROP CONSTRAINT course_pkey;
+ALTER TABLE public.items ALTER COLUMN itemid DROP DEFAULT;
+ALTER TABLE public.category ALTER COLUMN categoryid DROP DEFAULT;
+DROP SEQUENCE public.students_studentid_seq;
+DROP TABLE public.items;
+DROP SEQUENCE public.course_courseid_seq;
+DROP TABLE public.category;
+DROP EXTENSION plpgsql;
+DROP SCHEMA public;
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA public;
+
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -35,19 +59,17 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: course; Type: TABLE; Schema: public; Owner: dev
+-- Name: category; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.course (
-    courseid integer NOT NULL,
-    course character varying(255) NOT NULL
+CREATE TABLE public.category (
+    categoryid integer NOT NULL,
+    category character varying(255) NOT NULL
 );
 
 
-ALTER TABLE public.course OWNER TO dev;
-
 --
--- Name: course_courseid_seq; Type: SEQUENCE; Schema: public; Owner: dev
+-- Name: course_courseid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.course_courseid_seq
@@ -59,31 +81,27 @@ CREATE SEQUENCE public.course_courseid_seq
     CACHE 1;
 
 
-ALTER TABLE public.course_courseid_seq OWNER TO dev;
-
 --
--- Name: course_courseid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dev
+-- Name: course_courseid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.course_courseid_seq OWNED BY public.course.courseid;
+ALTER SEQUENCE public.course_courseid_seq OWNED BY public.category.categoryid;
 
 
 --
--- Name: students; Type: TABLE; Schema: public; Owner: dev
+-- Name: items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.students (
-    studentid integer NOT NULL,
-    name character varying(255) NOT NULL,
-    courseid integer NOT NULL,
-    grade integer NOT NULL
+CREATE TABLE public.items (
+    itemid integer NOT NULL,
+    item character varying(255) NOT NULL,
+    categoryid integer NOT NULL,
+    quantity integer NOT NULL
 );
 
 
-ALTER TABLE public.students OWNER TO dev;
-
 --
--- Name: students_studentid_seq; Type: SEQUENCE; Schema: public; Owner: dev
+-- Name: students_studentid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.students_studentid_seq
@@ -95,99 +113,107 @@ CREATE SEQUENCE public.students_studentid_seq
     CACHE 1;
 
 
-ALTER TABLE public.students_studentid_seq OWNER TO dev;
-
 --
--- Name: students_studentid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dev
+-- Name: students_studentid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.students_studentid_seq OWNED BY public.students.studentid;
+ALTER SEQUENCE public.students_studentid_seq OWNED BY public.items.itemid;
 
 
 --
--- Name: course courseid; Type: DEFAULT; Schema: public; Owner: dev
+-- Name: category categoryid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.course ALTER COLUMN courseid SET DEFAULT nextval('public.course_courseid_seq'::regclass);
-
-
---
--- Name: students studentid; Type: DEFAULT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public.students ALTER COLUMN studentid SET DEFAULT nextval('public.students_studentid_seq'::regclass);
+ALTER TABLE ONLY public.category ALTER COLUMN categoryid SET DEFAULT nextval('public.course_courseid_seq'::regclass);
 
 
 --
--- Data for Name: course; Type: TABLE DATA; Schema: public; Owner: dev
+-- Name: items itemid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COPY public.course (courseid, course) FROM stdin;
-2	Biology
-3	Politcal Science
-4	Algebra
-5	Econonomics
-6	Anatomy
-7	Physiology
-1	Geometry
-8	JavaScript
-9	HTML
-10	ls
-11	ls
-12	ja
-13	jx
-14	je
-15	jt
-16	tj
-17	zz
-18	j
-19	
+ALTER TABLE ONLY public.items ALTER COLUMN itemid SET DEFAULT nextval('public.students_studentid_seq'::regclass);
+
+
+--
+-- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.category (categoryid, category) FROM stdin;
+2	Food
+3	Automotive
+4	Hygiene
+5	Office Supply
+6	Cleaning Supplies
+7	Drawing
+8	Dining
+9	Kitchen
+10	 Kitchen
+11	Tools
+12	Hardware
+13	Personal
+14	Cleaning
+15	Alcohol
+16	Spirits
+17	
+18	dsd
+19	Ralph's
+20	Costco
+21	Lowe's
+22	Office Max
 \.
 
 
 --
--- Data for Name: students; Type: TABLE DATA; Schema: public; Owner: dev
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.students (studentid, name, courseid, grade) FROM stdin;
-2	John Smith	3	78
-3	Tom Davies	6	88
-4	Bront Alright	1	92
-5	Casy Chang	1	99
-6	JT Canyon	7	79
-7	Ted Hronist	4	90
-49	alex A	1	5
+COPY public.items (itemid, item, categoryid, quantity) FROM stdin;
+4	Motor Oil	3	2
+12	Scew Driver	11	1
+22	Bread	19	1
+23	Paper Towels	20	1
+24	Scews	21	10
+25	Printer Paper	22	1
+28	Milk	20	2
+29	Milk	20	1
 \.
 
 
 --
--- Name: course_courseid_seq; Type: SEQUENCE SET; Schema: public; Owner: dev
+-- Name: course_courseid_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.course_courseid_seq', 19, true);
-
-
---
--- Name: students_studentid_seq; Type: SEQUENCE SET; Schema: public; Owner: dev
---
-
-SELECT pg_catalog.setval('public.students_studentid_seq', 49, true);
+SELECT pg_catalog.setval('public.course_courseid_seq', 22, true);
 
 
 --
--- Name: course course_pkey; Type: CONSTRAINT; Schema: public; Owner: dev
+-- Name: students_studentid_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.course
-    ADD CONSTRAINT course_pkey PRIMARY KEY (courseid);
+SELECT pg_catalog.setval('public.students_studentid_seq', 29, true);
 
 
 --
--- Name: students students_pkey; Type: CONSTRAINT; Schema: public; Owner: dev
+-- Name: category course_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.students
-    ADD CONSTRAINT students_pkey PRIMARY KEY (studentid);
+ALTER TABLE ONLY public.category
+    ADD CONSTRAINT course_pkey PRIMARY KEY (categoryid);
+
+
+--
+-- Name: items students_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items
+    ADD CONSTRAINT students_pkey PRIMARY KEY (itemid);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --

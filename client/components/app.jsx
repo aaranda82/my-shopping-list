@@ -129,7 +129,7 @@ class App extends React.Component {
         <Header />
         <div className="container">
           <div className="row">
-            <div id="itemForm" className="col-12">
+            <div id="itemForm" className="col-12 col-md-6">
               <ItemForm newItem={this.newItem}
                 itemToUpdate={this.state.itemToUpdate}
                 updateItem={this.updateItem} />

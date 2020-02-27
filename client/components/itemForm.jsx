@@ -42,6 +42,7 @@ class ItemForm extends React.Component {
     } else if (!quantity) {
       this.setState({ quantityError: 'Please Add Quantity' });
     } else if (!itemError || !categoryError || !quantityError) {
+      this.setState({ isLoading: true })
       this.props.newItem(this.state.item);
       this.handleCancel();
     }
@@ -146,6 +147,21 @@ class ItemForm extends React.Component {
     }
   }
 
+  handleAddButtonText() {
+    const className = this.handleAddButtonClass()
+    switch (className) {
+      case 'btn-primary':
+        return 'ADD'
+        break;
+      case 'btn-secondary':
+        return 'ENTER ITEM INFO'
+        break;
+      case 'btn-success':
+        return 'UPDATE'
+        break;
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { name, category, quantity, id } = this.props.itemToUpdate;
     if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
@@ -165,7 +181,7 @@ class ItemForm extends React.Component {
     return (
       <form className="needs-validation" noValidate>
         <div className="form-group">
-          <label htmlFor="Item">Item</label>
+          <label htmlFor="Item" className="mt-3">Item</label>
           <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
@@ -183,7 +199,7 @@ class ItemForm extends React.Component {
           type="submit"
           className={`btn m-1 ${this.handleAddButtonClass()}`}
           onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate} >
-          {this.state.addOrUpdate}
+          {this.handleAddButtonText()}
         </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
       </form>
