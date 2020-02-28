@@ -51,7 +51,6 @@ class ItemForm extends React.Component {
 
   handleItemUpdate(event) {
     event.preventDefault();
-    console.log(this.state.item);
     this.props.updateItem(this.state.item);
     this.handleCancel();
   }
@@ -181,22 +180,27 @@ class ItemForm extends React.Component {
     }
   }
 
+  handleenableInputs() {
+    const communicating = !!this.props.communicatingWithServer;
+    return communicating;
+  }
+
   render() {
     return (
       <form className='needs-validation' noValidate>
         <div className="form-group">
           <label htmlFor="Item" className="mt-3">I need:</label>
-          <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} />
+          <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} disabled={this.handleenableInputs()} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Store">From:</label>
-          <input type="text" className="form-control" value={this.state.item.store} onChange={this.storeChange} onBlur={this.validateStore} />
+          <input type="text" className="form-control" value={this.state.item.store} onChange={this.storeChange} onBlur={this.validateStore} disabled={this.handleenableInputs()} />
           <div className="text-danger">{this.state.storeError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Item">Quantity:</label>
-          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} />
+          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} disabled={this.handleenableInputs()} />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button

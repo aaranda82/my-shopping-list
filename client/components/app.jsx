@@ -12,7 +12,8 @@ class App extends React.Component {
       itemToUpdate: {},
       isMobilePortrait: true,
       inputFormFeedback: '',
-      pendingConfirm: false,
+      pendingConfirmDelete: false,
+      communicatingWithServer: false,
       view: {
         name: 'shoppingList',
         store: ''
@@ -49,6 +50,7 @@ class App extends React.Component {
   }
 
   async newItem(newItem) {
+    this.setState({ communicatingWithServer: true });
     const postInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -63,7 +65,8 @@ class App extends React.Component {
       const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
       this.setState({
         itemsToBuy,
-        inputFormFeedback: 'New Item Added'
+        inputFormFeedback: 'New Item Added',
+        communicatingWithServer: false
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -84,7 +87,7 @@ class App extends React.Component {
       this.setState({
         itemsToBuy,
         inputFormFeedback: 'Item Deleted',
-        pendingConfirm: false
+        pendingConfirmDelete: false
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -160,7 +163,7 @@ class App extends React.Component {
   cancelDelete() {
     this.setState({
       inputFormFeedback: '',
-      pendingConfirm: false
+      pendingConfirmDelete: false
     });
   }
 
@@ -176,7 +179,7 @@ class App extends React.Component {
     );
     this.setState({
       inputFormFeedback: confirmCancelButton,
-      pendingConfirm: true
+      pendingConfirmDelete: true
     });
   }
 
@@ -191,7 +194,7 @@ class App extends React.Component {
               <ItemForm newItem={this.newItem}
                 itemToUpdate={this.state.itemToUpdate}
                 updateItem={this.updateItem}
-              />
+                communicatingWithServer={this.state.communicatingWithServer} />
             </div>
             <div id="CRUD-feedback" className="col-12 col-md-6 display-4 text-center">
               {this.state.inputFormFeedback}
@@ -204,7 +207,7 @@ class App extends React.Component {
                 isMobile={this.state.isMobilePortrait}
                 setView={this.setView}
                 updateItem={this.updateItem}
-                pendingConfirm={this.state.pendingConfirm} />
+                pendingConfirmDelete={this.state.pendingConfirmDelete} />
             </div>
           </div>
         </div>

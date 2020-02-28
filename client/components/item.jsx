@@ -170,7 +170,7 @@ class Items extends React.Component {
   }
 
   handleButtonEnable() {
-    if (this.props.pendingConfirm) {
+    if (this.props.pendingConfirmDelete) {
       return true;
     } else {
       return false;
