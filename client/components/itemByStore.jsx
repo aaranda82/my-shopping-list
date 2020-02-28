@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ItemByCategory(props) {
+function ItemByStore(props) {
   return (
     <tr>
       <th className="align-middle" scope="row">{props.index}</th>
@@ -10,4 +10,4 @@ function ItemByCategory(props) {
   );
 }
 
-export default ItemByCategory;
+export default ItemByStore;

@@ -7,19 +7,19 @@ class ItemForm extends React.Component {
     this.state = {
       item: {
         item: '',
-        category: '',
+        store: '',
         quantity: ''
       },
       addOrUpdate: 'ADD',
       itemError: '',
-      categoryError: '',
+      storeError: '',
       quantityError: ''
     };
     this.itemChange = this.itemChange.bind(this);
     this.categoryChange = this.categoryChange.bind(this);
     this.quantityChange = this.quantityChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
+    // this.handleUpdate = this.handleUpdate.bind(this);
     this.validateItem = this.validateItem.bind(this);
     this.validateCategory = this.validateCategory.bind(this);
     this.validateQuantity = this.validateQuantity.bind(this);
@@ -27,42 +27,43 @@ class ItemForm extends React.Component {
 
   handleAdd(event) {
     event.preventDefault();
-    const { itemError, categoryError, quantityError } = this.state;
-    const { item, category, quantity } = this.state.item;
-    if (!item && !category && !quantity) {
+    const { itemError, storeError, quantityError } = this.state;
+    const { item, store, quantity } = this.state.item;
+    if (!item && !store && !quantity) {
       this.setState({
         itemError: 'Please Add Item',
-        categoryError: 'Please Add Category',
+        storeError: 'Please Add Category',
         quantityError: 'Please Add Quantity'
       });
     } else if (!item) {
       this.setState({ itemError: 'Please Add Item' });
-    } else if (!category) {
-      this.setState({ categoryError: 'Please Add Category' });
+    } else if (!store) {
+      this.setState({ storeError: 'Please Add Category' });
     } else if (!quantity) {
       this.setState({ quantityError: 'Please Add Quantity' });
-    } else if (!itemError || !categoryError || !quantityError) {
+    } else if (!itemError || !storeError || !quantityError) {
       this.setState({ isLoading: true });
       this.props.newItem(this.state.item);
       this.handleCancel();
     }
   }
 
-  handleUpdate() {
-    this.props.updateItem(this.state.item);
-    this.handleCancel();
-  }
+  // handleUpdate(event) {
+  //   event.preventDefault();
+  //   this.props.updateItem(this.state.item);
+  //   this.handleCancel();
+  // }
 
   handleCancel() {
     this.setState({
       item: {
         item: '',
-        category: '',
+        store: '',
         quantity: ''
       },
       addOrUpdate: 'ADD',
       itemError: '',
-      categoryError: '',
+      storeError: '',
       quantityError: ''
     });
   }
@@ -95,22 +96,22 @@ class ItemForm extends React.Component {
       return false;
     } else {
       const item = { ...this.state.item };
-      item.category = event.target.value;
+      item.store = event.target.value;
       this.setState({
         item,
-        categoryError: ''
+        storeError: ''
       });
     }
   }
 
   validateCategory(event) {
     event.preventDefault();
-    const category = event.target.value;
-    let categoryError = '';
-    if (!category) {
-      categoryError = 'Please Enter Category';
+    const store = event.target.value;
+    let storeError = '';
+    if (!store) {
+      storeError = 'Please Enter Category';
     }
-    this.setState({ categoryError });
+    this.setState({ storeError });
   }
 
   quantityChange(event) {
@@ -135,9 +136,9 @@ class ItemForm extends React.Component {
   }
 
   handleAddButtonClass() {
-    const { item, category, quantity } = this.state.item;
+    const { item, store, quantity } = this.state.item;
     if (this.state.addOrUpdate === 'ADD') {
-      if (item && category && quantity) {
+      if (item && store && quantity) {
         return 'btn-primary';
       } else {
         return 'btn-secondary';
@@ -162,36 +163,36 @@ class ItemForm extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const { name, category, quantity, id } = this.props.itemToUpdate;
-    if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
-      this.setState({
-        item: {
-          item: name,
-          category,
-          quantity,
-          id: parseInt(id)
-        },
-        addOrUpdate: 'UPDATE'
-      });
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   const { name, store, quantity, id } = this.props.itemToUpdate;
+  //   if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
+  //     this.setState({
+  //       item: {
+  //         item: name,
+  //         store,
+  //         quantity,
+  //         id: parseInt(id)
+  //       },
+  //       addOrUpdate: 'UPDATE'
+  //     });
+  //   }
+  // }
 
   render() {
     return (
-      <form className="needs-validation" noValidate>
+      <form className='needs-validation' noValidate>
         <div className="form-group">
-          <label htmlFor="Item" className="mt-3">Item</label>
+          <label htmlFor="Item" className="mt-3">I need:</label>
           <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="Category">Category</label>
-          <input type="text" className="form-control" value={this.state.item.category} onChange={this.categoryChange} onBlur={this.validateCategory} />
-          <div className="text-danger">{this.state.categoryError}</div>
+          <label htmlFor="Category">From:</label>
+          <input type="text" className="form-control" value={this.state.item.store} onChange={this.categoryChange} onBlur={this.validateCategory} />
+          <div className="text-danger">{this.state.storeError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="Item">Quantity</label>
+          <label htmlFor="Item">Quantity:</label>
           <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>

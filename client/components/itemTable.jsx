@@ -13,7 +13,14 @@ function itemElements(props) {
     );
   } else {
     const tabelItems = itemsToBuy.map((itemObj, index) => {
-      return <Items key={index} index={index + 1} item={itemObj} update={props.update} delete={props.delete} setView={props.setView} />;
+      return <Items key={index}
+        index={index + 1}
+        item={itemObj}
+        update={props.update}
+        delete={props.delete}
+        setView={props.setView}
+        updateFeedback={props.updateFeedback}
+        updateItem={props.updateItem} />;
     });
     return (
       <tbody>
@@ -26,7 +33,7 @@ function itemElements(props) {
 function ItemTable(props) {
   const tableClass = 'table table-striped';
   return (
-    <table className={props.isMobile ? `${tableClass} table-sm` : tableClass}>
+    <table className={props.isMobile ? `${tableClass} table-sm table-responsive` : tableClass}>
       <thead>
         <tr>
           <th scope="col">#</th>

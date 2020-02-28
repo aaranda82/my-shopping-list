@@ -1,47 +1,47 @@
 import React from 'react';
-import ItemByCategory from './itemByCategory';
+import ItemByStore from './itemByStore';
 
-class ListByCategory extends React.Component {
+class ListByStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      itemsByCategory: {}
+      itemsByStore: {}
     };
   }
 
   async componentDidMount() {
-    const category = this.props.category;
+    const store = this.props.store;
     try {
-      const response = await fetch(`/api/items/${category}`);
-      const itemsByCategory = await response.json();
+      const response = await fetch(`/api/items/${store}`);
+      const itemsByStore = await response.json();
       if (!response.ok) {
         throw response;
       }
-      this.setState({ itemsByCategory });
+      this.setState({ itemsByStore });
     } catch (error) {
       console.error(error);
     }
   }
 
   parseItems() {
-    if (this.state.itemsByCategory.length > 0) {
-      const itemsByCategoryParsed = this.state.itemsByCategory.map((itemObj, index) => {
-        return <ItemByCategory item={itemObj} key={itemObj.itemid} index={index + 1} />;
+    if (this.state.itemsByStore.length > 0) {
+      const itemsByStoreParsed = this.state.itemsByStore.map((itemObj, index) => {
+        return <ItemByStore item={itemObj} key={itemObj.itemid} index={index + 1} />;
       });
-      return itemsByCategoryParsed;
+      return itemsByStoreParsed;
     } else {
       const itemObj = {
         item: 'LOADING INFO',
         quantity: null
       };
-      return <ItemByCategory item={itemObj} key={1} index={1} />;
+      return <ItemByStore item={itemObj} key={1} index={1} />;
     }
   }
 
   render() {
     return (
       <>
-        <div className="text-center display-4 mb-3">{this.props.category}</div>
+        <div className="text-center display-4 mb-3">{this.props.store}</div>
         <table className='table table-striped table-sm'>
           <thead>
             <tr>
@@ -60,4 +60,4 @@ class ListByCategory extends React.Component {
   }
 }
 
-export default ListByCategory;
+export default ListByStore;
