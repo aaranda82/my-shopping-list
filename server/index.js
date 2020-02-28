@@ -18,7 +18,7 @@ app.get('/api/health-check', (req, res) => {
 
 app.get('/api/items', async (req, res) => {
   try {
-    const items = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').orderBy('created_on', "asc");
+    const items = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').orderBy('created_on', 'asc');
     res.json(items);
   } catch (error) {
     console.error(error);
@@ -68,7 +68,7 @@ app.post('/api/items', async (req, res) => {
 
 app.delete('/api/items/:id', async (req, res) => {
   try {
-    const itemToDelete = await knex('items').where('itemid', '=', req.params.id).del();
+    await knex('items').where('itemid', '=', req.params.id).del();
     res.json(req.params.id);
   } catch (error) {
     console.error(error);
@@ -76,7 +76,7 @@ app.delete('/api/items/:id', async (req, res) => {
 });
 
 app.put('/api/items/:id', async (req, res) => {
-  let { item, store, quantity } = req.body;
+  const { item, store, quantity } = req.body;
   const id = parseInt(req.params.id);
   try {
     const categorySearchId = await knex('store').select('storeid').where('store', '=', store);
@@ -97,7 +97,7 @@ app.put('/api/items/:id', async (req, res) => {
     const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', id);
     res.json(itemSearch[0]);
   } catch (error) {
-    console.error("** Error:", error);
+    console.error('** Error:', error);
   }
 });
 
