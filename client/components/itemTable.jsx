@@ -22,7 +22,7 @@ function itemElements(props) {
         updateFeedback={props.updateFeedback}
         updateItem={props.updateItem}
         isMobile={props.isMobile}
-        pendingConfirm={props.pendingConfirm} />;
+        pendingConfirmDelete={props.pendingConfirmDelete} />;
     });
     return (
       <tbody>
