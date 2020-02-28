@@ -2,7 +2,7 @@ import React from 'react';
 import ItemTable from './itemTable';
 import Header from './header';
 import ItemForm from './itemForm';
-import ListByCategory from './listByCategory';
+import ListByStore from './listByStore';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,9 +11,10 @@ class App extends React.Component {
       itemsToBuy: [],
       itemToUpdate: {},
       isMobilePortrait: true,
+      inputFormFeedback: '',
       view: {
         name: 'shoppingList',
-        category: ''
+        store: ''
       }
     };
     this.newItem = this.newItem.bind(this);
@@ -57,9 +58,17 @@ class App extends React.Component {
         throw response;
       }
       const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
-      this.setState({ itemsToBuy });
+      this.setState({
+        itemsToBuy,
+        inputFormFeedback: 'New Item Added'
+      });
+      this.handleFeedbackReset()
     } catch (error) {
       console.error(error);
+      this.setState({
+        inputFormFeedback: 'An Unexpected Error Occurred'
+      })
+      this.handleFeedbackReset()
     }
   }
 
@@ -70,9 +79,17 @@ class App extends React.Component {
       const response = await fetch(`/api/items/${id}`, deleteInit);
       const responseJSON = await response.json();
       const itemsToBuy = this.state.itemsToBuy.filter(index => index.itemid !== parseInt(responseJSON));
-      this.setState({ itemsToBuy });
+      this.setState({
+        itemsToBuy,
+        inputFormFeedback: 'Item Deleted'
+      });
+      this.handleFeedbackReset()
     } catch (error) {
       console.error(error);
+      this.setState({
+        inputFormFeedback: 'An Unexpected Error Occurred'
+      })
+      this.handleFeedbackReset()
     }
   }
 
@@ -81,7 +98,7 @@ class App extends React.Component {
     this.setState({
       itemToUpdate: {
         name,
-        category: title,
+        store: title,
         quantity: value,
         id
       }
@@ -89,16 +106,17 @@ class App extends React.Component {
   }
 
   async updateItem(item) {
+    const quantity = parseInt(item.quantity)
+    const id = parseInt(item.itemId);
     const updateInit = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        category: item.category,
+        store: item.store,
         item: item.item,
-        quantity: item.quantity
+        quantity: quantity
       })
     };
-    const id = parseInt(item.id);
     try {
       const response = await fetch(`/api/items/${id}`, updateInit);
       const responseJSON = await response.json();
@@ -108,18 +126,32 @@ class App extends React.Component {
       const itemsToBuy = [...this.state.itemsToBuy];
       const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === responseJSON.itemid);
       itemsToBuy[indexOfUpdated] = responseJSON;
-      this.setState({ itemsToBuy });
+      this.setState({
+        itemsToBuy,
+        inputFormFeedback: 'Item Updated'
+      });
+      this.handleFeedbackReset()
     } catch (error) {
       console.error(error);
+      this.setState({
+        inputFormFeedback: 'An Unexpected Error Occurred'
+      })
+      this.handleFeedbackReset()
     }
   }
 
-  setView(name, category) {
+  setView(name, store) {
     const view = {
       name,
-      category
+      store
     };
     this.setState({ view });
+  }
+
+  handleFeedbackReset() {
+    setTimeout(() => {
+      this.setState({ inputFormFeedback: '' })
+    }, 3000)
   }
 
   handleRender() {
@@ -131,26 +163,32 @@ class App extends React.Component {
           <div className="row">
             <div id="itemForm" className="col-12 col-md-6">
               <ItemForm newItem={this.newItem}
-                itemToUpdate={this.state.itemToUpdate}
-                updateItem={this.updateItem} />
+              // itemToUpdate={this.state.itemToUpdate}
+              // updateItem={this.updateItem}
+              />
+            </div>
+            <div id="CRUD-feedback" className="col-12 col-md-6 display-4 text-center">
+              {this.state.inputFormFeedback}
             </div>
             <div id="itemTable" className="col-12">
               <ItemTable itemsToBuy={this.state.itemsToBuy}
                 delete={this.deleteItem}
                 update={this.itemToUpdate}
+                itemToUpdate={this.state.itemToUpdate}
                 isMobile={this.state.isMobilePortrait}
-                setView={this.setView} />
+                setView={this.setView}
+                updateItem={this.updateItem} />
             </div>
           </div>
         </div>
       </>
     );
-    const categoryView = (
+    const storeView = (
       <>
         <Header />
         <div className="container">
           <div className="row">
-            <ListByCategory category={this.state.view.category} setView={this.setView} />
+            <ListByStore store={this.state.view.store} setView={this.setView} />
           </div>
         </div>
       </>
@@ -159,8 +197,8 @@ class App extends React.Component {
       case 'shoppingList':
         domView = shoppingListView;
         break;
-      case 'category':
-        domView = categoryView;
+      case 'store':
+        domView = storeView;
         break;
     }
     return domView;
