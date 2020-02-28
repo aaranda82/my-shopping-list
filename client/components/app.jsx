@@ -12,6 +12,7 @@ class App extends React.Component {
       itemToUpdate: {},
       isMobilePortrait: true,
       inputFormFeedback: '',
+      pendingConfirm: false,
       view: {
         name: 'shoppingList',
         store: ''
@@ -23,6 +24,8 @@ class App extends React.Component {
     this.updateItem = this.updateItem.bind(this);
     this.screenSizeCheck = this.screenSizeCheck.bind(this);
     this.setView = this.setView.bind(this);
+    this.confirmDeleteItem = this.confirmDeleteItem.bind(this);
+    this.cancelDelete = this.cancelDelete.bind(this);
   }
 
   async componentDidMount() {
@@ -62,18 +65,17 @@ class App extends React.Component {
         itemsToBuy,
         inputFormFeedback: 'New Item Added'
       });
-      this.handleFeedbackReset()
+      this.handleFeedbackReset();
     } catch (error) {
       console.error(error);
       this.setState({
         inputFormFeedback: 'An Unexpected Error Occurred'
-      })
-      this.handleFeedbackReset()
+      });
+      this.handleFeedbackReset();
     }
   }
 
-  async deleteItem(event) {
-    const id = parseInt(event.target.id);
+  async deleteItem(id) {
     const deleteInit = { method: 'DELETE' };
     try {
       const response = await fetch(`/api/items/${id}`, deleteInit);
@@ -81,15 +83,16 @@ class App extends React.Component {
       const itemsToBuy = this.state.itemsToBuy.filter(index => index.itemid !== parseInt(responseJSON));
       this.setState({
         itemsToBuy,
-        inputFormFeedback: 'Item Deleted'
+        inputFormFeedback: 'Item Deleted',
+        pendingConfirm: false
       });
-      this.handleFeedbackReset()
+      this.handleFeedbackReset();
     } catch (error) {
       console.error(error);
       this.setState({
         inputFormFeedback: 'An Unexpected Error Occurred'
-      })
-      this.handleFeedbackReset()
+      });
+      this.handleFeedbackReset();
     }
   }
 
@@ -100,13 +103,13 @@ class App extends React.Component {
         name,
         store: title,
         quantity: value,
-        id
+        itemId: id
       }
     });
   }
 
   async updateItem(item) {
-    const quantity = parseInt(item.quantity)
+    const quantity = parseInt(item.quantity);
     const id = parseInt(item.itemId);
     const updateInit = {
       method: 'PUT',
@@ -130,13 +133,13 @@ class App extends React.Component {
         itemsToBuy,
         inputFormFeedback: 'Item Updated'
       });
-      this.handleFeedbackReset()
+      this.handleFeedbackReset();
     } catch (error) {
       console.error(error);
       this.setState({
         inputFormFeedback: 'An Unexpected Error Occurred'
-      })
-      this.handleFeedbackReset()
+      });
+      this.handleFeedbackReset();
     }
   }
 
@@ -150,8 +153,31 @@ class App extends React.Component {
 
   handleFeedbackReset() {
     setTimeout(() => {
-      this.setState({ inputFormFeedback: '' })
-    }, 3000)
+      this.setState({ inputFormFeedback: '' });
+    }, 3000);
+  }
+
+  cancelDelete() {
+    this.setState({
+      inputFormFeedback: '',
+      pendingConfirm: false
+    });
+  }
+
+  confirmDeleteItem(event) {
+    event.preventDefault();
+    const { id } = event.target;
+    const confirmCancelButton = (
+      <>
+        <div>Are You Sure?</div>
+        <button className='btn btn-danger' onClick={() => { this.deleteItem(id); }}>Confirm Delete</button>
+        <button className='btn btn-outline-dark' onClick={this.cancelDelete}>Cancel</button>
+      </>
+    );
+    this.setState({
+      inputFormFeedback: confirmCancelButton,
+      pendingConfirm: true
+    });
   }
 
   handleRender() {
@@ -163,8 +189,8 @@ class App extends React.Component {
           <div className="row">
             <div id="itemForm" className="col-12 col-md-6">
               <ItemForm newItem={this.newItem}
-              // itemToUpdate={this.state.itemToUpdate}
-              // updateItem={this.updateItem}
+                itemToUpdate={this.state.itemToUpdate}
+                updateItem={this.updateItem}
               />
             </div>
             <div id="CRUD-feedback" className="col-12 col-md-6 display-4 text-center">
@@ -172,12 +198,13 @@ class App extends React.Component {
             </div>
             <div id="itemTable" className="col-12">
               <ItemTable itemsToBuy={this.state.itemsToBuy}
-                delete={this.deleteItem}
-                update={this.itemToUpdate}
+                delete={this.confirmDeleteItem}
+                itemToUpdateFx={this.itemToUpdate}
                 itemToUpdate={this.state.itemToUpdate}
                 isMobile={this.state.isMobilePortrait}
                 setView={this.setView}
-                updateItem={this.updateItem} />
+                updateItem={this.updateItem}
+                pendingConfirm={this.state.pendingConfirm} />
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Items from './item';
+import Item from './item';
 
 function itemElements(props) {
   const itemsToBuy = props.itemsToBuy;
@@ -12,19 +12,21 @@ function itemElements(props) {
       </tbody>
     );
   } else {
-    const tabelItems = itemsToBuy.map((itemObj, index) => {
-      return <Items key={index}
+    const tableItems = itemsToBuy.map((itemObj, index) => {
+      return <Item key={index}
         index={index + 1}
         item={itemObj}
-        update={props.update}
+        itemToUpdateFx={props.itemToUpdateFx}
         delete={props.delete}
         setView={props.setView}
         updateFeedback={props.updateFeedback}
-        updateItem={props.updateItem} />;
+        updateItem={props.updateItem}
+        isMobile={props.isMobile}
+        pendingConfirm={props.pendingConfirm} />;
     });
     return (
       <tbody>
-        {tabelItems}
+        {tableItems}
       </tbody>
     );
   }

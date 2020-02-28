@@ -8,7 +8,8 @@ class ItemForm extends React.Component {
       item: {
         item: '',
         store: '',
-        quantity: ''
+        quantity: '',
+        itemId: ''
       },
       addOrUpdate: 'ADD',
       itemError: '',
@@ -16,12 +17,12 @@ class ItemForm extends React.Component {
       quantityError: ''
     };
     this.itemChange = this.itemChange.bind(this);
-    this.categoryChange = this.categoryChange.bind(this);
+    this.storeChange = this.storeChange.bind(this);
     this.quantityChange = this.quantityChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-    // this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleItemUpdate = this.handleItemUpdate.bind(this);
     this.validateItem = this.validateItem.bind(this);
-    this.validateCategory = this.validateCategory.bind(this);
+    this.validateStore = this.validateStore.bind(this);
     this.validateQuantity = this.validateQuantity.bind(this);
   }
 
@@ -32,13 +33,13 @@ class ItemForm extends React.Component {
     if (!item && !store && !quantity) {
       this.setState({
         itemError: 'Please Add Item',
-        storeError: 'Please Add Category',
+        storeError: 'Please Add Store',
         quantityError: 'Please Add Quantity'
       });
     } else if (!item) {
       this.setState({ itemError: 'Please Add Item' });
     } else if (!store) {
-      this.setState({ storeError: 'Please Add Category' });
+      this.setState({ storeError: 'Please Add Store' });
     } else if (!quantity) {
       this.setState({ quantityError: 'Please Add Quantity' });
     } else if (!itemError || !storeError || !quantityError) {
@@ -48,18 +49,20 @@ class ItemForm extends React.Component {
     }
   }
 
-  // handleUpdate(event) {
-  //   event.preventDefault();
-  //   this.props.updateItem(this.state.item);
-  //   this.handleCancel();
-  // }
+  handleItemUpdate(event) {
+    event.preventDefault();
+    console.log(this.state.item);
+    this.props.updateItem(this.state.item);
+    this.handleCancel();
+  }
 
   handleCancel() {
     this.setState({
       item: {
         item: '',
         store: '',
-        quantity: ''
+        quantity: '',
+        itemId: ''
       },
       addOrUpdate: 'ADD',
       itemError: '',
@@ -91,7 +94,7 @@ class ItemForm extends React.Component {
     this.setState({ itemError });
   }
 
-  categoryChange(event) {
+  storeChange(event) {
     if (event.target.value.length > 25) {
       return false;
     } else {
@@ -104,12 +107,12 @@ class ItemForm extends React.Component {
     }
   }
 
-  validateCategory(event) {
+  validateStore(event) {
     event.preventDefault();
     const store = event.target.value;
     let storeError = '';
     if (!store) {
-      storeError = 'Please Enter Category';
+      storeError = 'Please Enter Store';
     }
     this.setState({ storeError });
   }
@@ -163,20 +166,20 @@ class ItemForm extends React.Component {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const { name, store, quantity, id } = this.props.itemToUpdate;
-  //   if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
-  //     this.setState({
-  //       item: {
-  //         item: name,
-  //         store,
-  //         quantity,
-  //         id: parseInt(id)
-  //       },
-  //       addOrUpdate: 'UPDATE'
-  //     });
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    const { name, store, quantity, itemId } = this.props.itemToUpdate;
+    if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
+      this.setState({
+        item: {
+          item: name,
+          store,
+          quantity,
+          itemId: parseInt(itemId)
+        },
+        addOrUpdate: 'UPDATE'
+      });
+    }
+  }
 
   render() {
     return (
@@ -187,8 +190,8 @@ class ItemForm extends React.Component {
           <div className="text-danger">{this.state.itemError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="Category">From:</label>
-          <input type="text" className="form-control" value={this.state.item.store} onChange={this.categoryChange} onBlur={this.validateCategory} />
+          <label htmlFor="Store">From:</label>
+          <input type="text" className="form-control" value={this.state.item.store} onChange={this.storeChange} onBlur={this.validateStore} />
           <div className="text-danger">{this.state.storeError}</div>
         </div>
         <div className="form-group">
@@ -199,7 +202,7 @@ class ItemForm extends React.Component {
         <button
           type="submit"
           className={`btn m-1 ${this.handleAddButtonClass()}`}
-          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleUpdate} >
+          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleItemUpdate} >
           {this.handleAddButtonText()}
         </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
