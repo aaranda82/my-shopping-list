@@ -49,6 +49,47 @@ class App extends React.Component {
     this.setState({ isMobilePortrait: window.innerWidth < 450 });
   }
 
+  async createNewStore(newItem, op) {
+
+    const postInit = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newItem)
+    };
+    try {
+      const response = await fetch('/api/items/new-store', postInit);
+      const responseJSON = await response.json();
+      if (!response.ok) {
+        throw response;
+      }
+      if (op === 'new item') {
+        const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
+        this.setState({
+          itemsToBuy,
+          inputFormFeedback: 'New Item Added',
+          communicatingWithServer: false
+        });
+        this.handleFeedbackReset();
+      } else if (op === 'update item') {
+        const itemsToBuy = [...this.state.itemsToBuy];
+        const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === responseJSON.itemid);
+        itemsToBuy[indexOfUpdated] = responseJSON;
+        this.setState({
+          itemsToBuy,
+          inputFormFeedback: 'Item Updated'
+        });
+        this.handleFeedbackReset();
+      }
+
+    } catch (error) {
+      console.error(error);
+      this.setState({
+        inputFormFeedback: 'An Unexpected Error Occurred'
+      });
+      this.handleFeedbackReset();
+    }
+  }
+
   async newItem(newItem) {
     this.setState({ communicatingWithServer: true });
     const postInit = {
@@ -62,13 +103,29 @@ class App extends React.Component {
       if (!response.ok) {
         throw response;
       }
-      const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
-      this.setState({
-        itemsToBuy,
-        inputFormFeedback: 'New Item Added',
-        communicatingWithServer: false
-      });
-      this.handleFeedbackReset();
+      if (responseJSON === 'no store') {
+        const op = 'new item';
+        const inputFormFeedback = (
+          <>
+            <div>This store is not in the database. Create New Store?</div>
+            <button className='btn btn-primary' onClick={() => { this.createNewStore(newItem, op); }}>OK</button>
+            <button className='btn btn-outline-dark' onClick={this.cancelDelete}>Cancel</button>
+          </>
+        );
+        this.setState({
+          inputFormFeedback,
+          pendingConfirmDelete: true
+        });
+      } else {
+
+        const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
+        this.setState({
+          itemsToBuy,
+          inputFormFeedback: 'New Item Added',
+          communicatingWithServer: false
+        });
+        this.handleFeedbackReset();
+      }
     } catch (error) {
       console.error(error);
       this.setState({
@@ -86,8 +143,7 @@ class App extends React.Component {
       const itemsToBuy = this.state.itemsToBuy.filter(index => index.itemid !== parseInt(responseJSON));
       this.setState({
         itemsToBuy,
-        inputFormFeedback: 'Item Deleted',
-        pendingConfirmDelete: false
+        inputFormFeedback: 'Item Deleted'
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -112,16 +168,11 @@ class App extends React.Component {
   }
 
   async updateItem(item) {
-    const quantity = parseInt(item.quantity);
-    const id = parseInt(item.itemId);
+    const id = item.itemId;
     const updateInit = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        store: item.store,
-        item: item.item,
-        quantity: quantity
-      })
+      body: JSON.stringify(item)
     };
     try {
       const response = await fetch(`/api/items/${id}`, updateInit);
@@ -129,14 +180,29 @@ class App extends React.Component {
       if (!response.ok) {
         throw response;
       }
-      const itemsToBuy = [...this.state.itemsToBuy];
-      const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === responseJSON.itemid);
-      itemsToBuy[indexOfUpdated] = responseJSON;
-      this.setState({
-        itemsToBuy,
-        inputFormFeedback: 'Item Updated'
-      });
-      this.handleFeedbackReset();
+      if (responseJSON === 'no store') {
+        const op = 'update item';
+        const inputFormFeedback = (
+          <>
+            <div>This store is not in the database. Create New Store?</div>
+            <button className='btn btn-primary' onClick={() => { this.createNewStore(item, op); }}>OK</button>
+            <button className='btn btn-outline-dark' onClick={this.cancelDelete}>Cancel</button>
+          </>
+        );
+        this.setState({
+          inputFormFeedback,
+          pendingConfirmDelete: true
+        });
+      } else {
+        const itemsToBuy = [...this.state.itemsToBuy];
+        const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === responseJSON.itemid);
+        itemsToBuy[indexOfUpdated] = responseJSON;
+        this.setState({
+          itemsToBuy,
+          inputFormFeedback: 'Item Updated'
+        });
+        this.handleFeedbackReset();
+      }
     } catch (error) {
       console.error(error);
       this.setState({
@@ -156,14 +222,18 @@ class App extends React.Component {
 
   handleFeedbackReset() {
     setTimeout(() => {
-      this.setState({ inputFormFeedback: '' });
-    }, 3000);
+      this.setState({
+        inputFormFeedback: '',
+        pendingConfirmDelete: false
+      });
+    }, 2000);
   }
 
   cancelDelete() {
     this.setState({
       inputFormFeedback: '',
-      pendingConfirmDelete: false
+      pendingConfirmDelete: false,
+      communicatingWithServer: false
     });
   }
 
@@ -196,7 +266,7 @@ class App extends React.Component {
                 updateItem={this.updateItem}
                 communicatingWithServer={this.state.communicatingWithServer} />
             </div>
-            <div id="CRUD-feedback" className="col-12 col-md-6 display-4 text-center">
+            <div id="CRUD-feedback" className={`col-12 col-md-6 text-center ${window.innerWidth < 700 ? 'h5' : 'display-4'} ${this.state.inputFormFeedback ? 'bg-warning' : null}`}>
               {this.state.inputFormFeedback}
             </div>
             <div id="itemTable" className="col-12">

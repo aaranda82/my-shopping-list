@@ -2,10 +2,26 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const db = require('./database');
-var knex = require('knex')({
+const knex = require('knex')({
   client: 'pg',
   connection: process.env.DATABASE_URL
 });
+const CronJob = require('cron').CronJob;
+
+const Job = new CronJob('0 */120 * * * *', () => {
+  try {
+    const sql = `delete from "items"
+                       where "itemid" > 0`;
+    db.query(sql);
+    const sql2 = `delete from "store"
+                        where "storeid" > 0`;
+    db.query(sql2);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+Job.start();
 
 app.get('/api/health-check', (req, res) => {
   try {
@@ -44,14 +60,7 @@ app.post('/api/items', async (req, res) => {
   try {
     const categorySearchId = await knex('store').select('storeid').where('store', '=', store);
     if (categorySearchId.length === 0) {
-      const categoryInsertId = await knex('store').insert({ store: store }, 'storeid');
-      const itemInsert = await knex('items').insert({
-        item,
-        storeid: categoryInsertId[0],
-        quantity
-      }, 'itemid');
-      const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', itemInsert[0]);
-      res.json(itemSearch[0]);
+      res.json('no store');
     } else {
       const itemInsert = await knex('items').insert({
         item,
@@ -61,6 +70,23 @@ app.post('/api/items', async (req, res) => {
       const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', itemInsert[0]);
       res.json(itemSearch[0]);
     }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/items/new-store', async (req, res) => {
+  let { item, store, quantity } = req.body;
+  quantity = parseInt(quantity);
+  try {
+    const categoryInsertId = await knex('store').insert({ store: store }, 'storeid');
+    const itemInsert = await knex('items').insert({
+      item,
+      storeid: categoryInsertId[0],
+      quantity
+    }, 'itemid');
+    const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', itemInsert[0]);
+    res.json(itemSearch[0]);
   } catch (error) {
     console.error(error);
   }
@@ -81,12 +107,7 @@ app.put('/api/items/:id', async (req, res) => {
   try {
     const categorySearchId = await knex('store').select('storeid').where('store', '=', store);
     if (categorySearchId.length === 0) {
-      const categoryInsertId = await knex('store').insert({ store }, 'storeid');
-      await knex('items').where('itemid', '=', id).update({
-        item,
-        quantity,
-        storeid: categoryInsertId[0]
-      });
+      res.json('no store');
     } else {
       await knex('items').where('itemid', '=', id).update({
         item,
