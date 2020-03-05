@@ -1,3 +1,21 @@
 .cursor-pointer{
   cursor: pointer;
 }
+
+.shade{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .4);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.myModal{
+  z-index: 2;
+  position: fixed;
+  left: 48%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+}

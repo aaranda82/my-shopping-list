@@ -41,20 +41,25 @@ class ListByStore extends React.Component {
   render() {
     return (
       <>
-        <div className="text-center display-4 mb-3">{this.props.store}</div>
-        <table className='table table-striped table-sm'>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Item</th>
-              <th scope="col">Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.parseItems()}
-          </tbody>
-        </table>
-        <button className='btn btn-primary' onClick={() => this.props.setView('shoppingList', {})}>Back</button>
+        <div className="container">
+          <div className="row">
+
+            <div className="text-center display-4 mb-3">{this.props.store}</div>
+            <table className='table table-striped table-sm'>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Item</th>
+                  <th scope="col">Qty</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.parseItems()}
+              </tbody>
+            </table>
+            <button className='btn btn-primary' onClick={() => this.props.setView('shoppingList', {})}>Back</button>
+          </div>
+        </div>
       </>
     );
   }

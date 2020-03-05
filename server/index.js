@@ -79,13 +79,26 @@ app.post('/api/items/new-store', async (req, res) => {
   let { item, store, quantity } = req.body;
   quantity = parseInt(quantity);
   try {
-    const categoryInsertId = await knex('store').insert({ store: store }, 'storeid');
+    const categoryInsertId = await knex('store').insert({ store }, 'storeid');
     const itemInsert = await knex('items').insert({
       item,
       storeid: categoryInsertId[0],
       quantity
     }, 'itemid');
     const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', itemInsert[0]);
+    res.json(itemSearch[0]);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/items/update-new-store', async (req, res) => {
+  const { store, itemId } = req.body;
+  try {
+    let storeid = await knex('store').insert({ store }, 'storeid');
+    storeid = storeid[0];
+    await knex('items').where('itemid', '=', itemId).update({ storeid });
+    const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', itemId);
     res.json(itemSearch[0]);
   } catch (error) {
     console.error(error);
@@ -107,18 +120,18 @@ app.put('/api/items/:id', async (req, res) => {
   try {
     const categorySearchId = await knex('store').select('storeid').where('store', '=', store);
     if (categorySearchId.length === 0) {
-      res.json('no store');
+      return res.json('no store');
     } else {
       await knex('items').where('itemid', '=', id).update({
         item,
         quantity,
         storeid: categorySearchId[0].storeid
       });
+      const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', id);
+      res.json(itemSearch[0]);
     }
-    const itemSearch = await knex('items').join('store', 'store.storeid', '=', 'items.storeid').where('itemid', '=', id);
-    res.json(itemSearch[0]);
   } catch (error) {
-    console.error('** Error:', error);
+    console.error('** PUT Error:', error);
   }
 });
 
