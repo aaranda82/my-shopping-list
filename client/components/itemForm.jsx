@@ -3,7 +3,6 @@ import React from 'react';
 class ItemForm extends React.Component {
   constructor(props) {
     super(props);
-    this.handleAdd = this.handleAdd.bind(this);
     this.state = {
       item: {
         item: '',
@@ -16,11 +15,11 @@ class ItemForm extends React.Component {
       storeError: '',
       quantityError: ''
     };
+    this.handleAdd = this.handleAdd.bind(this);
     this.itemChange = this.itemChange.bind(this);
     this.storeChange = this.storeChange.bind(this);
     this.quantityChange = this.quantityChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-    this.handleItemUpdate = this.handleItemUpdate.bind(this);
     this.validateItem = this.validateItem.bind(this);
     this.validateStore = this.validateStore.bind(this);
     this.validateQuantity = this.validateQuantity.bind(this);
@@ -49,12 +48,6 @@ class ItemForm extends React.Component {
     }
   }
 
-  handleItemUpdate(event) {
-    event.preventDefault();
-    this.props.updateItem(this.state.item);
-    this.handleCancel();
-  }
-
   handleCancel() {
     this.setState({
       item: {
@@ -63,7 +56,6 @@ class ItemForm extends React.Component {
         quantity: '',
         itemId: ''
       },
-      addOrUpdate: 'ADD',
       itemError: '',
       storeError: '',
       quantityError: ''
@@ -165,21 +157,6 @@ class ItemForm extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const { name, store, quantity, itemId } = this.props.itemToUpdate;
-    if (this.props.itemToUpdate !== prevProps.itemToUpdate) {
-      this.setState({
-        item: {
-          item: name,
-          store,
-          quantity,
-          itemId: parseInt(itemId)
-        },
-        addOrUpdate: 'UPDATE'
-      });
-    }
-  }
-
   handleenableInputs() {
     const communicating = !!this.props.communicatingWithServer;
     return communicating;
@@ -190,12 +167,24 @@ class ItemForm extends React.Component {
       <form className='needs-validation' noValidate>
         <div className="form-group">
           <label htmlFor="Item" className="mt-3">I need:</label>
-          <input type="text" className="form-control" value={this.state.item.item} onChange={this.itemChange} onBlur={this.validateItem} disabled={this.handleenableInputs()} />
+          <input
+            type="text"
+            className="form-control"
+            value={this.state.item.item}
+            onChange={this.itemChange}
+            onBlur={this.validateItem}
+            disabled={this.handleenableInputs()} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="Store">From:</label>
-          <input type="text" className="form-control" value={this.state.item.store} onChange={this.storeChange} onBlur={this.validateStore} disabled={this.handleenableInputs()} />
+          <input
+            type="text"
+            className="form-control"
+            value={this.state.item.store}
+            onChange={this.storeChange}
+            onBlur={this.validateStore}
+            disabled={this.handleenableInputs()} />
           <div className="text-danger">{this.state.storeError}</div>
         </div>
         <div className="form-group">

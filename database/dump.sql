@@ -17,13 +17,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 ALTER TABLE ONLY public.items DROP CONSTRAINT students_pkey;
-ALTER TABLE ONLY public.category DROP CONSTRAINT course_pkey;
+ALTER TABLE ONLY public.store DROP CONSTRAINT course_pkey;
+ALTER TABLE public.store ALTER COLUMN storeid DROP DEFAULT;
 ALTER TABLE public.items ALTER COLUMN itemid DROP DEFAULT;
-ALTER TABLE public.category ALTER COLUMN categoryid DROP DEFAULT;
 DROP SEQUENCE public.students_studentid_seq;
 DROP TABLE public.items;
 DROP SEQUENCE public.course_courseid_seq;
-DROP TABLE public.category;
+DROP TABLE public.store;
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
 --
@@ -59,12 +59,12 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: category; Type: TABLE; Schema: public; Owner: -
+-- Name: store; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.category (
-    categoryid integer NOT NULL,
-    category character varying(255) NOT NULL
+CREATE TABLE public.store (
+    storeid integer NOT NULL,
+    store character varying(255) NOT NULL
 );
 
 
@@ -85,7 +85,7 @@ CREATE SEQUENCE public.course_courseid_seq
 -- Name: course_courseid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.course_courseid_seq OWNED BY public.category.categoryid;
+ALTER SEQUENCE public.course_courseid_seq OWNED BY public.store.storeid;
 
 
 --
@@ -95,8 +95,9 @@ ALTER SEQUENCE public.course_courseid_seq OWNED BY public.category.categoryid;
 CREATE TABLE public.items (
     itemid integer NOT NULL,
     item character varying(255) NOT NULL,
-    categoryid integer NOT NULL,
-    quantity integer NOT NULL
+    storeid integer NOT NULL,
+    quantity integer NOT NULL,
+    created_on timestamp with time zone DEFAULT now()
 );
 
 
@@ -121,13 +122,6 @@ ALTER SEQUENCE public.students_studentid_seq OWNED BY public.items.itemid;
 
 
 --
--- Name: category categoryid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.category ALTER COLUMN categoryid SET DEFAULT nextval('public.course_courseid_seq'::regclass);
-
-
---
 -- Name: items itemid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -135,47 +129,40 @@ ALTER TABLE ONLY public.items ALTER COLUMN itemid SET DEFAULT nextval('public.st
 
 
 --
--- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: -
+-- Name: store storeid; Type: DEFAULT; Schema: public; Owner: -
 --
 
-COPY public.category (categoryid, category) FROM stdin;
-2	Food
-3	Automotive
-4	Hygiene
-5	Office Supply
-6	Cleaning Supplies
-7	Drawing
-8	Dining
-9	Kitchen
-10	 Kitchen
-11	Tools
-12	Hardware
-13	Personal
-14	Cleaning
-15	Alcohol
-16	Spirits
-17	
-18	dsd
-19	Ralph's
-20	Costco
-21	Lowe's
-22	Office Max
-\.
+ALTER TABLE ONLY public.store ALTER COLUMN storeid SET DEFAULT nextval('public.course_courseid_seq'::regclass);
 
 
 --
 -- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.items (itemid, item, categoryid, quantity) FROM stdin;
-4	Motor Oil	3	2
-12	Scew Driver	11	1
-22	Bread	19	1
-23	Paper Towels	20	1
-24	Scews	21	10
-25	Printer Paper	22	1
-28	Milk	20	2
-29	Milk	20	1
+COPY public.items (itemid, item, storeid, quantity, created_on) FROM stdin;
+175	c	127	1	2020-03-04 16:14:43.677533-08
+177	a	127	1	2020-03-04 16:17:12.417832-08
+173	a	138	1	2020-03-04 16:14:22.084797-08
+\.
+
+
+--
+-- Data for Name: store; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.store (storeid, store) FROM stdin;
+127	a
+128	a1
+129	a12
+130	a121
+131	a1211
+132	a12111
+133	a121111
+134	a1211112
+135	c
+136	b
+137	az
+138	az1
 \.
 
 
@@ -183,22 +170,22 @@ COPY public.items (itemid, item, categoryid, quantity) FROM stdin;
 -- Name: course_courseid_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.course_courseid_seq', 22, true);
+SELECT pg_catalog.setval('public.course_courseid_seq', 138, true);
 
 
 --
 -- Name: students_studentid_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.students_studentid_seq', 29, true);
+SELECT pg_catalog.setval('public.students_studentid_seq', 177, true);
 
 
 --
--- Name: category course_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: store course_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.category
-    ADD CONSTRAINT course_pkey PRIMARY KEY (categoryid);
+ALTER TABLE ONLY public.store
+    ADD CONSTRAINT course_pkey PRIMARY KEY (storeid);
 
 
 --
