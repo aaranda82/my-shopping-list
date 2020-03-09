@@ -12,5 +12,5 @@ A web application written in React with an Express server, and styled with boots
 
 ## Preview
 
-![SGT React](SGT_preview.png)
+![SGT React](my-shopping-list_preview.png)
 
