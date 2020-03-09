@@ -135,7 +135,7 @@ app.put('/api/items/:id', async (req, res) => {
   }
 });
 
-app.listen(3002, () => {
+app.listen(3003, () => {
   // eslint-disable-next-line no-console
-  console.log('Express Server Listening on Port 3002');
+  console.log('Express Server Listening on Port 3003');
 });
