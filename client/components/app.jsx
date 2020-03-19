@@ -231,7 +231,7 @@ class App extends React.Component {
         const modal = { ...this.state.modal };
         modal.showing = true;
         modal.title = 'New Store';
-        modal.content = 'This store is not in the database. Create New Store?';
+        modal.content = `"${item.store}" is not in the database. Create New Store?`;
         modal.primaryButton = (
           <>
             <button className='btn btn-primary' onClick={() => { this.updateItemWithNewStore(item); }}>OK</button>
