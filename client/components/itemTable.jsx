@@ -3,11 +3,15 @@ import Item from './item';
 
 function itemElements(props) {
   const itemsToBuy = props.itemsToBuy;
-  if (!itemsToBuy) {
+  if (!itemsToBuy.length) {
     return (
       <tbody>
         <tr>
-          <td colSpan="4">No Data Recorded</td>
+          <th className="align-middle" scope="row">!</th>
+          <td className="align-middle">Shopping List Empty</td>
+          <td className="align-middle"></td>
+          <td className="align-middle"></td>
+          <td className="text-center"></td>
         </tr>
       </tbody>
     );
@@ -21,7 +25,7 @@ function itemElements(props) {
         setView={props.setView}
         updateFeedback={props.updateFeedback}
         updateItem={props.updateItem}
-        isMobile={props.isMobile}
+        // isMobile={props.isMobile}
         pendingConfirmDelete={props.pendingConfirmDelete}
         handleUpdateModal={props.handleUpdateModal} />;
     });
