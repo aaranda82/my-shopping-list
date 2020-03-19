@@ -121,29 +121,29 @@ class ModalInput extends React.Component {
   render() {
     return (
       <form className='needs-validation' noValidate>
-        <div className="form-group">
-          <label htmlFor="Item" className="mt-3">I need:</label>
+        <div className="form-group itemInput">
+          <label htmlFor="Item" className="mt-3 modalInputLabel">I need:</label>
           <input
             type="text"
-            className="form-control"
+            className={this.props.isMobileLandscape ? 'form-control-sm' : 'form-control'}
             value={this.state.itemToUpdate.item}
             onChange={this.itemChange}
             onBlur={this.validateItem} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
-        <div className="form-group">
-          <label htmlFor="Store">From:</label>
+        <div className="form-group storeInput">
+          <label htmlFor="Store" className="modalInputLabel">From:</label>
           <input
             type="text"
-            className="form-control"
+            className={this.props.isMobileLandscape ? 'form-control-sm' : 'form-control'}
             value={this.state.itemToUpdate.store}
             onChange={this.storeChange}
             onBlur={this.validateStore} />
           <div className="text-danger">{this.state.storeError}</div>
         </div>
-        <div className="form-group">
-          <label htmlFor="Item">Quantity:</label>
-          <input type="number" className="form-control" value={this.state.itemToUpdate.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} />
+        <div className="form-group quantityInput">
+          <label htmlFor="Item" className="modalInputLabel">Quantity:</label>
+          <input type="number" className={this.props.isMobileLandscape ? 'form-control-sm' : 'form-control'} value={this.state.itemToUpdate.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button type="submit" className="btn btn-success" onClick={this.handleItemUpdate} > Update </button>

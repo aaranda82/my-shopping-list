@@ -44,7 +44,6 @@ class ItemForm extends React.Component {
     } else if (!itemError || !storeError || !quantityError) {
       this.setState({ isLoading: true });
       this.props.newItem(this.state.item);
-      this.handleCancel();
     }
   }
 
@@ -162,6 +161,19 @@ class ItemForm extends React.Component {
     return communicating;
   }
 
+  renderStores() {
+    const storeList = this.props.itemsToBuy.map((item, index) => {
+      return <option key={index}>{item.store}</option>;
+    });
+    return storeList;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.communicatingWithServer !== prevProps.communicatingWithServer) {
+      this.handleCancel();
+    }
+  }
+
   render() {
     return (
       <form className='needs-validation' noValidate>
@@ -176,17 +188,23 @@ class ItemForm extends React.Component {
             disabled={this.handleenableInputs()} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
+
         <div className="form-group">
           <label htmlFor="Store">From:</label>
           <input
             type="text"
+            list="store"
             className="form-control"
             value={this.state.item.store}
             onChange={this.storeChange}
             onBlur={this.validateStore}
             disabled={this.handleenableInputs()} />
+          <datalist id="store">
+            {this.renderStores()}
+          </datalist>
           <div className="text-danger">{this.state.storeError}</div>
         </div>
+
         <div className="form-group">
           <label htmlFor="Item">Quantity:</label>
           <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} disabled={this.handleenableInputs()} />
@@ -195,7 +213,7 @@ class ItemForm extends React.Component {
         <button
           type="submit"
           className={`btn m-1 ${this.handleAddButtonClass()}`}
-          onClick={this.state.addOrUpdate === 'ADD' ? this.handleAdd : this.handleItemUpdate} >
+          onClick={this.handleAdd} >
           {this.handleAddButtonText()}
         </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>

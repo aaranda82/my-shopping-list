@@ -11,7 +11,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       itemsToBuy: [],
-      isMobilePortrait: true,
+      // isMobilePortrait: true,
       pendingConfirmDelete: false,
       communicatingWithServer: false,
       modal: {
@@ -64,10 +64,11 @@ class App extends React.Component {
   }
 
   screenSizeCheck() {
-    this.setState({ isMobilePortrait: window.innerWidth < 450 });
+    this.setState({ isMobilePortrait: (window.innerWidth > 500 && window.innerWidth < 680) });
   }
 
   async createNewStore(newItem) {
+    this.setState({ communicatingWithServer: true });
     const postInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -98,7 +99,6 @@ class App extends React.Component {
   }
 
   async newItem(newItem) {
-    this.setState({ communicatingWithServer: true });
     const postInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -113,7 +113,7 @@ class App extends React.Component {
       if (responseJSON === 'no store') {
         const modal = {
           showing: true,
-          content: 'This store is not in the database. Create New Store?',
+          content: `"${newItem.store}" is not in the database. Create New Store?`,
           primaryButton: (
             <>
               <button className='btn btn-primary' onClick={() => { this.createNewStore(newItem); }}>OK</button>
@@ -125,6 +125,7 @@ class App extends React.Component {
           modal
         });
       } else {
+        this.setState({ communicatingWithServer: true });
         const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
         const modal = { ...this.state.modal };
         modal.showing = true;
@@ -314,6 +315,7 @@ class App extends React.Component {
       showing: true,
       content: <ModalInput
         newItem={this.newItem}
+        isMobileLandscape={this.state.isMobilePortrait}
         itemToUpdate={itemToUpdate}
         updateItem={this.updateItem}
         communicatingWithServer={this.state.communicatingWithServer}
@@ -337,7 +339,8 @@ class App extends React.Component {
                 newItem={this.newItem}
                 itemToUpdate={this.state.itemToUpdate}
                 updateItem={this.updateItem}
-                communicatingWithServer={this.state.communicatingWithServer} />
+                communicatingWithServer={this.state.communicatingWithServer}
+                itemsToBuy={this.state.itemsToBuy} />
             </div>
             <div id="itemTable" className="col-12">
               <ItemTable

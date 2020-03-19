@@ -19,3 +19,18 @@
   transform: translate(-50%, -50%);
   width: fit-content;
 }
+
+@media (max-width: 680px) and (min-width: 500px){
+
+  .itemInput{
+    padding-left: 17px;
+  }
+  
+  .storeInput{
+    padding-left: 23px;
+  }
+  
+  .myModal{
+    top: 43%;
+  }
+}
