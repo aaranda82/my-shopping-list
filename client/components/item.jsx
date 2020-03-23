@@ -31,7 +31,7 @@ class Items extends React.Component {
       <tr>
         <th className="align-middle" scope="row">{this.props.index}</th>
         <td className="align-middle">{this.props.item.item}</td>
-        <td className="align-middle cursor-pointer" onClick={this.handleStoreOnClick()} >{this.props.item.store}</td>
+        <td className="align-middle cursor-pointer storeBtn" onClick={this.handleStoreOnClick()} >{this.props.item.store}</td>
         <td className="align-middle">{this.props.item.quantity}</td>
         <td className="text-center">
           <button type="button" className="btn btn-danger m-1" id={this.props.item.itemid} onClick={this.props.delete}>Delete</button>
