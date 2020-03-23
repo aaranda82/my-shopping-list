@@ -1,5 +1,22 @@
+td{
+  font-weight: 500;
+}
+
 .cursor-pointer{
   cursor: pointer;
+}
+
+.storeBtn{
+  color: blue;
+  font-weight: bolder;
+}
+
+.storeBtn:hover{
+  text-decoration: underline;
+}
+
+.storeBtn:active{
+  transform: scale(1.5)
 }
 
 .shade{
