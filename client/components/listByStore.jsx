@@ -43,7 +43,6 @@ class ListByStore extends React.Component {
       <>
         <div className="container">
           <div className="row">
-
             <div className="text-center display-4 mb-3">{this.props.store}</div>
             <table className='table table-striped table-sm'>
               <thead>

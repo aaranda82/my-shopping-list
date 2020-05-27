@@ -156,7 +156,7 @@ class ItemForm extends React.Component {
     }
   }
 
-  handleenableInputs() {
+  handleEnableInputs() {
     const communicating = !!this.props.communicatingWithServer;
     return communicating;
   }
@@ -185,7 +185,7 @@ class ItemForm extends React.Component {
             value={this.state.item.item}
             onChange={this.itemChange}
             onBlur={this.validateItem}
-            disabled={this.handleenableInputs()} />
+            disabled={this.handleEnableInputs()} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
 
@@ -198,7 +198,7 @@ class ItemForm extends React.Component {
             value={this.state.item.store}
             onChange={this.storeChange}
             onBlur={this.validateStore}
-            disabled={this.handleenableInputs()} />
+            disabled={this.handleEnableInputs()} />
           <datalist id="store">
             {this.renderStores()}
           </datalist>
@@ -207,7 +207,7 @@ class ItemForm extends React.Component {
 
         <div className="form-group">
           <label htmlFor="Item">Quantity:</label>
-          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} disabled={this.handleenableInputs()} />
+          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} disabled={this.handleEnableInputs()} />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button

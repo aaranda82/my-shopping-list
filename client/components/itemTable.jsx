@@ -20,12 +20,10 @@ function itemElements(props) {
       return <Item key={index}
         index={index + 1}
         item={itemObj}
-        // itemToUpdateFx={props.itemToUpdateFx}
         delete={props.delete}
         setView={props.setView}
         updateFeedback={props.updateFeedback}
         updateItem={props.updateItem}
-        // isMobile={props.isMobile}
         pendingConfirmDelete={props.pendingConfirmDelete}
         handleUpdateModal={props.handleUpdateModal} />;
     });

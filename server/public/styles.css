@@ -9,6 +9,7 @@ td{
 .storeBtn{
   color: blue;
   font-weight: bolder;
+  text-align: center;
 }
 
 .storeBtn:hover{
@@ -16,7 +17,7 @@ td{
 }
 
 .storeBtn:active{
-  transform: scale(1.5)
+  transform: scale(1.2)
 }
 
 .shade{
