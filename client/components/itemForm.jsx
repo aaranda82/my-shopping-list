@@ -92,7 +92,7 @@ class ItemForm extends React.Component {
   }
 
   itemInputColor() {
-    switch(this.state.itemError){
+    switch (this.state.itemError) {
       case 'Please Enter Item':
         return lightRed;
         break;
@@ -128,7 +128,7 @@ class ItemForm extends React.Component {
   }
 
   storeInputColor() {
-    switch(this.state.storeError){
+    switch (this.state.storeError) {
       case 'Please Enter Store':
         return lightRed;
         break;
@@ -162,7 +162,7 @@ class ItemForm extends React.Component {
   }
 
   quantityInputColor() {
-    switch(this.state.quantityError){
+    switch (this.state.quantityError) {
       case 'Please Enter Quantity':
         return lightRed;
         break;
