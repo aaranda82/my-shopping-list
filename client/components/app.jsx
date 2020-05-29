@@ -11,7 +11,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       itemsToBuy: [],
-      // isMobilePortrait: true,
       pendingConfirmDelete: false,
       communicatingWithServer: false,
       modal: {
@@ -99,6 +98,8 @@ class App extends React.Component {
   }
 
   async newItem(newItem) {
+    newItem.item = newItem.item.charAt(0).toUpperCase() + newItem.item.slice(1).toLowerCase();
+    newItem.store = newItem.store.charAt(0).toUpperCase() + newItem.store.slice(1).toLowerCase();
     const postInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
