@@ -1,4 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
+import { ColorScheme } from '../../server/public/ColorScheme';
+
+const { lightRed, lightGreen, grey } = ColorScheme;
+const Input = styled.input`
+  border: solid 1px ${props => props.color || null}
+`;
 
 class ItemForm extends React.Component {
   constructor(props) {
@@ -11,9 +18,9 @@ class ItemForm extends React.Component {
         itemId: ''
       },
       addOrUpdate: 'ADD',
-      itemError: '',
-      storeError: '',
-      quantityError: ''
+      itemError: null,
+      storeError: null,
+      quantityError: null
     };
     this.handleAdd = this.handleAdd.bind(this);
     this.itemChange = this.itemChange.bind(this);
@@ -55,9 +62,9 @@ class ItemForm extends React.Component {
         quantity: '',
         itemId: ''
       },
-      itemError: '',
-      storeError: '',
-      quantityError: ''
+      itemError: null,
+      storeError: null,
+      quantityError: null
     });
   }
 
@@ -84,6 +91,19 @@ class ItemForm extends React.Component {
     this.setState({ itemError });
   }
 
+  itemInputColor() {
+    switch (this.state.itemError) {
+      case 'Please Enter Item':
+        return lightRed;
+        break;
+      case '':
+        return lightGreen;
+        break;
+      case null:
+        return grey;
+    }
+  }
+
   storeChange(event) {
     if (event.target.value.length > 25) {
       return false;
@@ -107,6 +127,19 @@ class ItemForm extends React.Component {
     this.setState({ storeError });
   }
 
+  storeInputColor() {
+    switch (this.state.storeError) {
+      case 'Please Enter Store':
+        return lightRed;
+        break;
+      case '':
+        return lightGreen;
+        break;
+      case null:
+        return grey;
+    }
+  }
+
   quantityChange(event) {
     if (event.target.value >= 0 && event.target.value <= 100) {
       const item = { ...this.state.item };
@@ -126,6 +159,19 @@ class ItemForm extends React.Component {
       quantityError = 'Please Enter Quantity';
     }
     this.setState({ quantityError });
+  }
+
+  quantityInputColor() {
+    switch (this.state.quantityError) {
+      case 'Please Enter Quantity':
+        return lightRed;
+        break;
+      case '':
+        return lightGreen;
+        break;
+      case null:
+        return grey;
+    }
   }
 
   handleAddButtonClass() {
@@ -156,16 +202,24 @@ class ItemForm extends React.Component {
     }
   }
 
-  handleenableInputs() {
+  handleEnableInputs() {
     const communicating = !!this.props.communicatingWithServer;
     return communicating;
   }
 
   renderStores() {
-    const storeList = this.props.itemsToBuy.map((item, index) => {
-      return <option key={index}>{item.store}</option>;
+    const storeList = [];
+    this.props.itemsToBuy.forEach(element => {
+      const { store } = element;
+      if (!storeList.includes(store)) {
+        storeList.push(store);
+      }
     });
-    return storeList;
+    storeList.sort();
+    const storeElements = storeList.map((item, index) => {
+      return <option key={index}>{item}</option>;
+    });
+    return storeElements;
   }
 
   componentDidUpdate(prevProps) {
@@ -179,26 +233,28 @@ class ItemForm extends React.Component {
       <form className='needs-validation' noValidate>
         <div className="form-group">
           <label htmlFor="Item" className="mt-3">I need:</label>
-          <input
+          <Input
+            color={this.itemInputColor()}
             type="text"
             className="form-control"
             value={this.state.item.item}
             onChange={this.itemChange}
             onBlur={this.validateItem}
-            disabled={this.handleenableInputs()} />
+            disabled={this.handleEnableInputs()} />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
 
         <div className="form-group">
           <label htmlFor="Store">From:</label>
-          <input
+          <Input
+            color={this.storeInputColor()}
             type="text"
             list="store"
             className="form-control"
             value={this.state.item.store}
             onChange={this.storeChange}
             onBlur={this.validateStore}
-            disabled={this.handleenableInputs()} />
+            disabled={this.handleEnableInputs()} />
           <datalist id="store">
             {this.renderStores()}
           </datalist>
@@ -207,7 +263,14 @@ class ItemForm extends React.Component {
 
         <div className="form-group">
           <label htmlFor="Item">Quantity:</label>
-          <input type="number" className="form-control" value={this.state.item.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} disabled={this.handleenableInputs()} />
+          <Input
+            color={this.quantityInputColor()}
+            type="number"
+            className="form-control"
+            value={this.state.item.quantity}
+            onChange={this.quantityChange}
+            onBlur={this.validateQuantity}
+            disabled={this.handleEnableInputs()} />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button
