@@ -1,6 +1,38 @@
 import React from 'react';
+import styled from 'styled-components';
+import { ColorScheme } from '../../server/public/ColorScheme';
 
-class ModalInput extends React.Component {
+const { red, white } = ColorScheme;
+const Container = styled.div`
+  padding: 10px 0px 10px 0px;
+`;
+const InputContainer = styled.div`
+`;
+const Label = styled.label`
+  width: 100%;
+  color: ${white};
+`;
+const Input = styled.input`
+  border: none;
+  background-color: white;
+`;
+const Error = styled.div`
+  color: ${red};
+`;
+
+function renderInputs(label, type, text, value, onChange, onBlur, error) {
+  return (
+    <Container>
+      <InputContainer>
+        <Label htmlFor={label}>{text}</Label>
+        <Input type={type} value={value} onChange={onChange} onBlur={onBlur} ></Input>
+      </InputContainer>
+      <Error>{error}</Error>
+    </Container>
+  );
+}
+
+class ModalForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,32 +152,10 @@ class ModalInput extends React.Component {
 
   render() {
     return (
-      <form className='needs-validation' noValidate>
-        <div className="form-group itemInput">
-          <label htmlFor="Item" className="mt-3 modalInputLabel">I need:</label>
-          <input
-            type="text"
-            className={this.props.isMobileLandscape ? 'form-control-sm' : 'form-control'}
-            value={this.state.itemToUpdate.item}
-            onChange={this.itemChange}
-            onBlur={this.validateItem} />
-          <div className="text-danger">{this.state.itemError}</div>
-        </div>
-        <div className="form-group storeInput">
-          <label htmlFor="Store" className="modalInputLabel">From:</label>
-          <input
-            type="text"
-            className={this.props.isMobileLandscape ? 'form-control-sm' : 'form-control'}
-            value={this.state.itemToUpdate.store}
-            onChange={this.storeChange}
-            onBlur={this.validateStore} />
-          <div className="text-danger">{this.state.storeError}</div>
-        </div>
-        <div className="form-group quantityInput">
-          <label htmlFor="Item" className="modalInputLabel">Quantity:</label>
-          <input type="number" className={this.props.isMobileLandscape ? 'form-control-sm' : 'form-control'} value={this.state.itemToUpdate.quantity} onChange={this.quantityChange} onBlur={this.validateQuantity} />
-          <div className="text-danger">{this.state.quantityError}</div>
-        </div>
+      <form >
+        {renderInputs('Item', 'text', 'I need:', this.state.itemToUpdate.item, this.itemChange, this.validateItem, this.state.itemError)}
+        {renderInputs('Store', 'text', 'From:', this.state.itemToUpdate.store, this.storeChange, this.validateStore, this.state.storeError)}
+        {renderInputs('Qunatity', 'number', 'Quantity:', this.state.itemToUpdate.quantity, this.quantityChange, this.validateQuantity, this.state.quantityError)}
         <button type="submit" className="btn btn-success" onClick={this.handleItemUpdate} > Update </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
       </form>
@@ -153,4 +163,4 @@ class ModalInput extends React.Component {
   }
 }
 
-export default ModalInput;
+export default ModalForm;
