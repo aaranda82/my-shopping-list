@@ -23,6 +23,7 @@ const TheModal = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   border-radius: 10px;
+  padding: 40px;
 `;
 const Title = styled.div`
   color: ${white};
@@ -41,7 +42,9 @@ const Cancel = styled.div`
   }
 `;
 const Content = styled.div`
-  padding: 10px;
+  width: 100%;
+  padding: 20px 0px 20px 0px;
+  text-align: center;
 `;
 function Modal(props) {
   const { content, primaryButton, title } = props.stateDotModal;

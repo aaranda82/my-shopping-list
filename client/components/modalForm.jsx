@@ -3,18 +3,25 @@ import styled from 'styled-components';
 import { ColorScheme } from '../../server/public/ColorScheme';
 
 const { red, white } = ColorScheme;
+const Form = styled.form`
+  padding: 20px;
+`;
 const Container = styled.div`
   padding: 10px 0px 10px 0px;
 `;
 const InputContainer = styled.div`
+
 `;
 const Label = styled.label`
   width: 100%;
   color: ${white};
-`;
+  font-size: 2em;
+  `;
 const Input = styled.input`
   border: none;
   background-color: white;
+  font-size: 2em;
+  width: 100%;
 `;
 const Error = styled.div`
   color: ${red};
@@ -152,13 +159,13 @@ class ModalForm extends React.Component {
 
   render() {
     return (
-      <form >
+      <Form >
         {renderInputs('Item', 'text', 'I need:', this.state.itemToUpdate.item, this.itemChange, this.validateItem, this.state.itemError)}
         {renderInputs('Store', 'text', 'From:', this.state.itemToUpdate.store, this.storeChange, this.validateStore, this.state.storeError)}
         {renderInputs('Qunatity', 'number', 'Quantity:', this.state.itemToUpdate.quantity, this.quantityChange, this.validateQuantity, this.state.quantityError)}
         <button type="submit" className="btn btn-success" onClick={this.handleItemUpdate} > Update </button>
         <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
-      </form>
+      </Form>
     );
   }
 }
