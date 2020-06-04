@@ -4,7 +4,7 @@ import Header from './header';
 import ItemForm from './itemForm';
 import ListByStore from './listByStore';
 import Modal from './modal';
-import ModalInput from './modalInput';
+import ModalInput from './modalForm';
 
 class App extends React.Component {
   constructor(props) {
