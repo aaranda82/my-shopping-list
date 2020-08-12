@@ -1,5 +1,5 @@
-import React from "react";
-import Item from "./item";
+import React from 'react';
+import Item from './item';
 
 function itemElements(props) {
   const { itemsToBuy } = props;
@@ -38,7 +38,7 @@ function itemElements(props) {
 }
 
 function ItemTable(props) {
-  const tableClass = "table table-striped";
+  const tableClass = 'table table-striped';
   return (
     <table className={tableClass}>
       <thead>

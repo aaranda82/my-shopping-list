@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { ColorScheme } from "../../server/public/ColorScheme";
+import React from 'react';
+import styled from 'styled-components';
+import { ColorScheme } from '../../server/public/ColorScheme';
 
 const { blue, black, white } = ColorScheme;
 const Shade = styled.div`

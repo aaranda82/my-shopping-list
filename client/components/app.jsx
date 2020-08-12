@@ -1,10 +1,10 @@
-import React from "react";
-import ItemTable from "./itemTable";
-import Header from "./header";
-import ItemForm from "./itemForm";
-import ListByStore from "./listByStore";
-import Modal from "./modal";
-import ModalInput from "./modalForm";
+import React from 'react';
+import ItemTable from './itemTable';
+import Header from './header';
+import ItemForm from './itemForm';
+import ListByStore from './listByStore';
+import Modal from './modal';
+import ModalInput from './modalForm';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,14 +15,14 @@ class App extends React.Component {
       communicatingWithServer: false,
       modal: {
         showing: false,
-        content: "",
-        primaryButton: "",
-        title: "",
+        content: '',
+        primaryButton: '',
+        title: ''
       },
       view: {
-        name: "shoppingList",
-        store: "",
-      },
+        name: 'shoppingList',
+        store: ''
+      }
     };
     this.newItem = this.newItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
@@ -37,8 +37,8 @@ class App extends React.Component {
   handleCatchError() {
     const modal = {
       showing: true,
-      content: "An Unexpected Error Occurred",
-      title: "Error",
+      content: 'An Unexpected Error Occurred',
+      title: 'Error',
       primaryButton: (
         <button
           type="button"
@@ -48,15 +48,15 @@ class App extends React.Component {
         >
           Close
         </button>
-      ),
+      )
     };
     this.setState({ modal });
   }
 
   async componentDidMount() {
-    window.addEventListener("resize", this.screenSizeCheck);
+    window.addEventListener('resize', this.screenSizeCheck);
     try {
-      const response = await fetch("/api/items");
+      const response = await fetch('/api/items');
       const itemsToBuy = await response.json();
       this.setState({ itemsToBuy });
     } catch (error) {
@@ -67,24 +67,24 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.screenSizeCheck);
+    window.removeEventListener('resize', this.screenSizeCheck);
   }
 
   screenSizeCheck() {
     this.setState({
-      isMobilePortrait: window.innerWidth > 500 && window.innerWidth < 680,
+      isMobilePortrait: window.innerWidth > 500 && window.innerWidth < 680
     });
   }
 
   async createNewStore(newItem) {
     this.setState({ communicatingWithServer: true });
     const postInit = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newItem),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newItem)
     };
     try {
-      const response = await fetch("/api/items/new-store", postInit);
+      const response = await fetch('/api/items/new-store', postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
@@ -92,13 +92,13 @@ class App extends React.Component {
       const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
       const modal = { ...this.state.modal };
       modal.showing = true;
-      modal.content = "Item Added";
-      modal.title = "New Item";
+      modal.content = 'Item Added';
+      modal.title = 'New Item';
       modal.primaryButton = null;
       this.setState({
         modal,
         itemsToBuy,
-        communicatingWithServer: false,
+        communicatingWithServer: false
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -115,17 +115,17 @@ class App extends React.Component {
       newItem.store.charAt(0).toUpperCase() +
       newItem.store.slice(1).toLowerCase();
     const postInit = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newItem),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newItem)
     };
     try {
-      const response = await fetch("/api/items", postInit);
+      const response = await fetch('/api/items', postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
       }
-      if (responseJSON === "no store") {
+      if (responseJSON === 'no store') {
         const modal = {
           showing: true,
           content: `"${newItem.store}" is not in the database. Create New Store?`,
@@ -148,21 +148,21 @@ class App extends React.Component {
                 Close
               </button>
             </>
-          ),
+          )
         };
         this.setState({
-          modal,
+          modal
         });
       } else {
         this.setState({ communicatingWithServer: true });
         const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
         const modal = { ...this.state.modal };
         modal.showing = true;
-        modal.content = "Item Added";
-        modal.title = "New Item";
+        modal.content = 'Item Added';
+        modal.title = 'New Item';
         this.setState({
           itemsToBuy,
-          modal,
+          modal
         });
         this.handleFeedbackReset();
       }
@@ -174,19 +174,19 @@ class App extends React.Component {
   }
 
   async deleteItem(id) {
-    const deleteInit = { method: "DELETE" };
+    const deleteInit = { method: 'DELETE' };
     try {
       const response = await fetch(`/api/items/${id}`, deleteInit);
       const responseJSON = await response.json();
       const itemsToBuy = this.state.itemsToBuy.filter(
-        (index) => index.itemid !== parseInt(responseJSON)
+        index => index.itemid !== parseInt(responseJSON)
       );
       const modal = { ...this.state.modal };
-      modal.content = "Item Deleted";
-      modal.primaryButton = "";
+      modal.content = 'Item Deleted';
+      modal.primaryButton = '';
       this.setState({
         modal,
-        itemsToBuy,
+        itemsToBuy
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -199,8 +199,8 @@ class App extends React.Component {
     const { id } = event.target;
     const modal = {
       showing: true,
-      content: "Are You Sure?",
-      title: "Confirm Delete",
+      content: 'Are You Sure?',
+      title: 'Confirm Delete',
       primaryButton: (
         <>
           <button
@@ -220,39 +220,39 @@ class App extends React.Component {
             Close
           </button>
         </>
-      ),
+      )
     };
     this.setState({
-      modal,
+      modal
     });
   }
 
   async updateItemWithNewStore(newItem) {
     const postInit = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newItem),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newItem)
     };
     try {
-      const response = await fetch("/api/items/update-new-store", postInit);
+      const response = await fetch('/api/items/update-new-store', postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
       }
       const itemsToBuy = [...this.state.itemsToBuy];
       const indexOfUpdated = itemsToBuy.findIndex(
-        (index) => index.itemid === parseInt(newItem.itemId)
+        index => index.itemid === parseInt(newItem.itemId)
       );
       itemsToBuy[indexOfUpdated] = responseJSON;
       const modal = {
         showing: false,
-        content: "",
-        primaryButton: "",
-        title: "",
+        content: '',
+        primaryButton: '',
+        title: ''
       };
       this.setState({
         modal,
-        itemsToBuy,
+        itemsToBuy
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -264,9 +264,9 @@ class App extends React.Component {
   async updateItem(item) {
     const id = item.itemId;
     const updateInit = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item),
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item)
     };
     try {
       const response = await fetch(`/api/items/${id}`, updateInit);
@@ -274,10 +274,10 @@ class App extends React.Component {
       if (!response.ok) {
         throw response;
       }
-      if (responseJSON === "no store") {
+      if (responseJSON === 'no store') {
         const modal = { ...this.state.modal };
         modal.showing = true;
-        modal.title = "New Store";
+        modal.title = 'New Store';
         modal.content = `"${item.store}" is not in the database. Create New Store?`;
         modal.primaryButton = (
           <>
@@ -299,23 +299,23 @@ class App extends React.Component {
         );
         this.setState({
           modal,
-          pendingConfirmDelete: true,
+          pendingConfirmDelete: true
         });
       } else {
         const itemsToBuy = [...this.state.itemsToBuy];
         const indexOfUpdated = itemsToBuy.findIndex(
-          (index) => index.itemid === responseJSON.itemid
+          index => index.itemid === responseJSON.itemid
         );
         itemsToBuy[indexOfUpdated] = responseJSON;
         const modal = {
           showing: false,
-          content: "",
-          primaryButton: "",
-          title: "",
+          content: '',
+          primaryButton: '',
+          title: ''
         };
         this.setState({
           modal,
-          itemsToBuy,
+          itemsToBuy
         });
         this.handleFeedbackReset();
       }
@@ -328,7 +328,7 @@ class App extends React.Component {
   setView(name, store) {
     const view = {
       name,
-      store,
+      store
     };
     this.setState({ view });
   }
@@ -336,15 +336,15 @@ class App extends React.Component {
   handleFeedbackReset() {
     const modal = {
       showing: false,
-      content: "",
-      title: "",
-      primaryButton: "",
+      content: '',
+      title: '',
+      primaryButton: ''
     };
     setTimeout(() => {
       this.setState({
         modal,
         pendingConfirmDelete: false,
-        communicatingWithServer: false,
+        communicatingWithServer: false
       });
     }, 2000);
   }
@@ -352,14 +352,14 @@ class App extends React.Component {
   cancelOperation() {
     const modal = {
       showing: false,
-      content: "",
-      title: "",
-      primaryButton: null,
+      content: '',
+      title: '',
+      primaryButton: null
     };
     this.setState({
       modal,
       pendingConfirmDelete: false,
-      communicatingWithServer: false,
+      communicatingWithServer: false
     });
   }
 
@@ -370,7 +370,7 @@ class App extends React.Component {
       store: title,
       item: name,
       quantity: value,
-      itemId: id,
+      itemId: id
     };
     const modal = {
       showing: true,
@@ -385,7 +385,7 @@ class App extends React.Component {
           addOrUpdate="update"
         />
       ),
-      title: "Update Item",
+      title: 'Update Item'
     };
     this.setState({ modal });
   }
@@ -435,10 +435,10 @@ class App extends React.Component {
       </>
     );
     switch (this.state.view.name) {
-      case "shoppingList":
+      case 'shoppingList':
         domView = shoppingListView;
         break;
-      case "store":
+      case 'store':
         domView = storeView;
         break;
     }

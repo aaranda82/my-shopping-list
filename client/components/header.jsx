@@ -1,6 +1,6 @@
-import React from "react";
-import { ColorScheme } from "../../server/public/ColorScheme";
-import styled from "styled-components";
+import React from 'react';
+import { ColorScheme } from '../../server/public/ColorScheme';
+import styled from 'styled-components';
 
 const Nav = styled.nav`
   background-color: ${ColorScheme.blue};

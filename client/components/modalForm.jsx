@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { ColorScheme } from "../../server/public/ColorScheme";
+import React from 'react';
+import styled from 'styled-components';
+import { ColorScheme } from '../../server/public/ColorScheme';
 
 const { red, white, lightRed, lightGreen, blue } = ColorScheme;
 const Form = styled.form`
@@ -16,7 +16,7 @@ const Label = styled.label`
   font-size: 1em;
 `;
 const Input = styled.input`
-  border: solid 3px ${(props) => props.colors};
+  border: solid 3px ${props => props.colors};
   background-color: white;
   font-size: 1em;
   width: 80%;
@@ -63,14 +63,14 @@ class ModalForm extends React.Component {
     super(props);
     this.state = {
       itemToUpdate: {
-        item: "",
-        store: "",
-        quantity: "",
-        itemId: "",
+        item: '',
+        store: '',
+        quantity: '',
+        itemId: ''
       },
-      itemError: "",
-      storeError: "",
-      quantityError: "",
+      itemError: '',
+      storeError: '',
+      quantityError: ''
     };
     this.itemChange = this.itemChange.bind(this);
     this.storeChange = this.storeChange.bind(this);
@@ -99,7 +99,7 @@ class ModalForm extends React.Component {
       itemToUpdate.item = value;
       this.setState({
         itemToUpdate,
-        itemError: "",
+        itemError: ''
       });
     }
   }
@@ -107,19 +107,19 @@ class ModalForm extends React.Component {
   validateItem(event) {
     event.preventDefault();
     const item = event.target.value;
-    let itemError = "";
+    let itemError = '';
     if (!item) {
-      itemError = "Please Enter Item";
+      itemError = 'Please Enter Item';
     }
     this.setState({ itemError });
   }
 
   itemInputColor() {
     switch (this.state.itemError) {
-      case "Please Enter Item":
+      case 'Please Enter Item':
         return lightRed;
         break;
-      case "":
+      case '':
         return lightGreen;
         break;
       case null:
@@ -136,7 +136,7 @@ class ModalForm extends React.Component {
       itemToUpdate.store = value;
       this.setState({
         itemToUpdate,
-        storeError: "",
+        storeError: ''
       });
     }
   }
@@ -144,19 +144,19 @@ class ModalForm extends React.Component {
   validateStore(event) {
     event.preventDefault();
     const store = event.target.value;
-    let storeError = "";
+    let storeError = '';
     if (!store) {
-      storeError = "Please Enter Store";
+      storeError = 'Please Enter Store';
     }
     this.setState({ storeError });
   }
 
   storeInputColor() {
     switch (this.state.storeError) {
-      case "Please Enter Store":
+      case 'Please Enter Store':
         return lightRed;
         break;
-      case "":
+      case '':
         return lightGreen;
         break;
       case null:
@@ -171,7 +171,7 @@ class ModalForm extends React.Component {
       itemToUpdate.quantity = value;
       this.setState({
         itemToUpdate,
-        quantityError: "",
+        quantityError: ''
       });
     }
   }
@@ -179,19 +179,19 @@ class ModalForm extends React.Component {
   validateQuantity(event) {
     event.preventDefault();
     const quantity = event.target.value;
-    let quantityError = "";
+    let quantityError = '';
     if (!quantity) {
-      quantityError = "Please Enter Quantity";
+      quantityError = 'Please Enter Quantity';
     }
     this.setState({ quantityError });
   }
 
   quantityInputColor() {
     switch (this.state.quantityError) {
-      case "Please Enter Quantity":
+      case 'Please Enter Quantity':
         return lightRed;
         break;
-      case "":
+      case '':
         return lightGreen;
         break;
       case null:
@@ -207,16 +207,16 @@ class ModalForm extends React.Component {
 
   handleCancel() {
     const itemToUpdate = {
-      item: "",
-      store: "",
-      quantity: "",
-      itemId: "",
+      item: '',
+      store: '',
+      quantity: '',
+      itemId: ''
     };
     this.setState({
       itemToUpdate,
-      itemError: "",
-      storeError: "",
-      quantityError: "",
+      itemError: '',
+      storeError: '',
+      quantityError: ''
     });
     this.props.cancelOperation();
   }
@@ -225,9 +225,9 @@ class ModalForm extends React.Component {
     return (
       <Form>
         {renderInputs(
-          "Item",
-          "text",
-          "I need:",
+          'Item',
+          'text',
+          'I need:',
           this.state.itemToUpdate.item,
           this.itemChange,
           this.validateItem,
@@ -235,9 +235,9 @@ class ModalForm extends React.Component {
           this.itemInputColor
         )}
         {renderInputs(
-          "Store",
-          "text",
-          "From:",
+          'Store',
+          'text',
+          'From:',
           this.state.itemToUpdate.store,
           this.storeChange,
           this.validateStore,
@@ -245,9 +245,9 @@ class ModalForm extends React.Component {
           this.storeInputColor
         )}
         {renderInputs(
-          "Qunatity",
-          "number",
-          "Quantity:",
+          'Qunatity',
+          'number',
+          'Quantity:',
           this.state.itemToUpdate.quantity,
           this.quantityChange,
           this.validateQuantity,
@@ -259,8 +259,8 @@ class ModalForm extends React.Component {
           className="btn btn-success"
           onClick={this.handleItemUpdate}
         >
-          {" "}
-          Update{" "}
+          {' '}
+          Update{' '}
         </button>
         <button
           type="button"
