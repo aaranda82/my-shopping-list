@@ -4,7 +4,7 @@ import { ColorScheme } from '../../server/public/ColorScheme';
 
 const { lightRed, lightGreen, grey } = ColorScheme;
 const Input = styled.input`
-  border: solid 1px ${props => props.color || null}
+  border: solid 1px ${props => props.color};
 `;
 
 class ItemForm extends React.Component {
@@ -34,6 +34,8 @@ class ItemForm extends React.Component {
 
   handleAdd(event) {
     event.preventDefault();
+    // eslint-disable-next-line no-console
+    console.log('click');
     const { itemError, storeError, quantityError } = this.state;
     const { item, store, quantity } = this.state.item;
     if (!item && !store && !quantity) {
@@ -223,16 +225,20 @@ class ItemForm extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.communicatingWithServer !== prevProps.communicatingWithServer) {
+    if (
+      this.props.communicatingWithServer !== prevProps.communicatingWithServer
+    ) {
       this.handleCancel();
     }
   }
 
   render() {
     return (
-      <form className='needs-validation' noValidate>
+      <form className="needs-validation" noValidate>
         <div className="form-group">
-          <label htmlFor="Item" className="mt-3">I need:</label>
+          <label htmlFor="Item" className="mt-3">
+            I need:
+          </label>
           <Input
             color={this.itemInputColor()}
             type="text"
@@ -240,7 +246,9 @@ class ItemForm extends React.Component {
             value={this.state.item.item}
             onChange={this.itemChange}
             onBlur={this.validateItem}
-            disabled={this.handleEnableInputs()} />
+            disabled={this.handleEnableInputs()}
+            placeholder="add item"
+          />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
 
@@ -254,10 +262,10 @@ class ItemForm extends React.Component {
             value={this.state.item.store}
             onChange={this.storeChange}
             onBlur={this.validateStore}
-            disabled={this.handleEnableInputs()} />
-          <datalist id="store">
-            {this.renderStores()}
-          </datalist>
+            disabled={this.handleEnableInputs()}
+            placeholder="add store"
+          />
+          <datalist id="store">{this.renderStores()}</datalist>
           <div className="text-danger">{this.state.storeError}</div>
         </div>
 
@@ -270,16 +278,25 @@ class ItemForm extends React.Component {
             value={this.state.item.quantity}
             onChange={this.quantityChange}
             onBlur={this.validateQuantity}
-            disabled={this.handleEnableInputs()} />
+            disabled={this.handleEnableInputs()}
+            placeholder="add quantity"
+          />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button
           type="submit"
           className={`btn m-1 ${this.handleAddButtonClass()}`}
-          onClick={this.handleAdd} >
+          onClick={this.handleAdd}
+        >
           {this.handleAddButtonText()}
         </button>
-        <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
+        <button
+          type="button"
+          className="btn btn-dark m-1"
+          onClick={this.handleCancel}
+        >
+          CANCEL
+        </button>
       </form>
     );
   }
