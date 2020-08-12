@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ColorScheme } from '../../server/public/ColorScheme';
+import React from "react";
+import styled from "styled-components";
+import { ColorScheme } from "../../server/public/ColorScheme";
 
 const { blue, black, white } = ColorScheme;
 const Shade = styled.div`
@@ -17,13 +17,23 @@ const TheModal = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: fit-content;
   background-color: ${blue};
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   border-radius: 10px;
   padding: 40px;
+  width: 40%;
+  @media (max-width: 900px) {
+    & {
+      width: 60%;
+    }
+  }
+  @media (max-width: 600px) {
+    & {
+      width: 100%;
+    }
+  }
 `;
 const Title = styled.div`
   color: ${white};
@@ -32,19 +42,29 @@ const Title = styled.div`
   font-size: 2em;
 `;
 const Cancel = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 5%;
+  right: 7%;
   cursor: pointer;
+  font-size: 2em;
   color: ${white};
-  &:hover{
+  &:hover {
     color: ${black};
+  }
+  @media (max-width: 600px) {
+    & {
+      top: 3%;
+      right: 5%;
+    }
   }
 `;
 const Content = styled.div`
   width: 100%;
   padding: 20px 0px 20px 0px;
   text-align: center;
+  color: ${white};
+  font-size: 2em;
+  font-family: "Arial Black", Gadget, sans-serif;
 `;
 function Modal(props) {
   const { content, primaryButton, title } = props.stateDotModal;
@@ -54,14 +74,10 @@ function Modal(props) {
       <TheModal role="document">
         <Title>{title}</Title>
         <Cancel onClick={props.cancelOperation} title="Cancel">
-          X
+          <i className="fas fa-times"></i>
         </Cancel>
-        <Content>
-          {content}
-        </Content>
-        <div >
-          {primaryButton || null}
-        </div>
+        <Content>{content}</Content>
+        <div>{primaryButton || null}</div>
       </TheModal>
     </>
   );

@@ -1,10 +1,10 @@
-import React from 'react';
-import ItemTable from './itemTable';
-import Header from './header';
-import ItemForm from './itemForm';
-import ListByStore from './listByStore';
-import Modal from './modal';
-import ModalInput from './modalForm';
+import React from "react";
+import ItemTable from "./itemTable";
+import Header from "./header";
+import ItemForm from "./itemForm";
+import ListByStore from "./listByStore";
+import Modal from "./modal";
+import ModalInput from "./modalForm";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,14 +15,14 @@ class App extends React.Component {
       communicatingWithServer: false,
       modal: {
         showing: false,
-        content: '',
-        primaryButton: '',
-        title: ''
+        content: "",
+        primaryButton: "",
+        title: "",
       },
       view: {
-        name: 'shoppingList',
-        store: ''
-      }
+        name: "shoppingList",
+        store: "",
+      },
     };
     this.newItem = this.newItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
@@ -37,18 +37,26 @@ class App extends React.Component {
   handleCatchError() {
     const modal = {
       showing: true,
-      content: 'An Unexpected Error Occurred',
-      title: 'Error',
-      primaryButton: <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.cancelOperation}>Close</button>
+      content: "An Unexpected Error Occurred",
+      title: "Error",
+      primaryButton: (
+        <button
+          type="button"
+          className="btn btn-secondary"
+          data-dismiss="modal"
+          onClick={this.cancelOperation}
+        >
+          Close
+        </button>
+      ),
     };
     this.setState({ modal });
-
   }
 
   async componentDidMount() {
-    window.addEventListener('resize', this.screenSizeCheck);
+    window.addEventListener("resize", this.screenSizeCheck);
     try {
-      const response = await fetch('/api/items');
+      const response = await fetch("/api/items");
       const itemsToBuy = await response.json();
       this.setState({ itemsToBuy });
     } catch (error) {
@@ -59,22 +67,24 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.screenSizeCheck);
+    window.removeEventListener("resize", this.screenSizeCheck);
   }
 
   screenSizeCheck() {
-    this.setState({ isMobilePortrait: (window.innerWidth > 500 && window.innerWidth < 680) });
+    this.setState({
+      isMobilePortrait: window.innerWidth > 500 && window.innerWidth < 680,
+    });
   }
 
   async createNewStore(newItem) {
     this.setState({ communicatingWithServer: true });
     const postInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newItem)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newItem),
     };
     try {
-      const response = await fetch('/api/items/new-store', postInit);
+      const response = await fetch("/api/items/new-store", postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
@@ -82,13 +92,13 @@ class App extends React.Component {
       const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
       const modal = { ...this.state.modal };
       modal.showing = true;
-      modal.content = 'Item Added';
-      modal.title = 'New Item';
+      modal.content = "Item Added";
+      modal.title = "New Item";
       modal.primaryButton = null;
       this.setState({
         modal,
         itemsToBuy,
-        communicatingWithServer: false
+        communicatingWithServer: false,
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -98,43 +108,61 @@ class App extends React.Component {
   }
 
   async newItem(newItem) {
-    newItem.item = newItem.item.charAt(0).toUpperCase() + newItem.item.slice(1).toLowerCase();
-    newItem.store = newItem.store.charAt(0).toUpperCase() + newItem.store.slice(1).toLowerCase();
+    newItem.item =
+      newItem.item.charAt(0).toUpperCase() +
+      newItem.item.slice(1).toLowerCase();
+    newItem.store =
+      newItem.store.charAt(0).toUpperCase() +
+      newItem.store.slice(1).toLowerCase();
     const postInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newItem)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newItem),
     };
     try {
-      const response = await fetch('/api/items', postInit);
+      const response = await fetch("/api/items", postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
       }
-      if (responseJSON === 'no store') {
+      if (responseJSON === "no store") {
         const modal = {
           showing: true,
           content: `"${newItem.store}" is not in the database. Create New Store?`,
           primaryButton: (
             <>
-              <button className='btn btn-primary' onClick={() => { this.createNewStore(newItem); }}>OK</button>
-              <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.cancelOperation}>Close</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  this.createNewStore(newItem);
+                }}
+              >
+                OK
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+                onClick={this.cancelOperation}
+              >
+                Close
+              </button>
             </>
-          )
+          ),
         };
         this.setState({
-          modal
+          modal,
         });
       } else {
         this.setState({ communicatingWithServer: true });
         const itemsToBuy = [...this.state.itemsToBuy, responseJSON];
         const modal = { ...this.state.modal };
         modal.showing = true;
-        modal.content = 'Item Added';
-        modal.title = 'New Item';
+        modal.content = "Item Added";
+        modal.title = "New Item";
         this.setState({
           itemsToBuy,
-          modal
+          modal,
         });
         this.handleFeedbackReset();
       }
@@ -146,17 +174,19 @@ class App extends React.Component {
   }
 
   async deleteItem(id) {
-    const deleteInit = { method: 'DELETE' };
+    const deleteInit = { method: "DELETE" };
     try {
       const response = await fetch(`/api/items/${id}`, deleteInit);
       const responseJSON = await response.json();
-      const itemsToBuy = this.state.itemsToBuy.filter(index => index.itemid !== parseInt(responseJSON));
+      const itemsToBuy = this.state.itemsToBuy.filter(
+        (index) => index.itemid !== parseInt(responseJSON)
+      );
       const modal = { ...this.state.modal };
-      modal.content = 'Item Deleted';
-      modal.primaryButton = '';
+      modal.content = "Item Deleted";
+      modal.primaryButton = "";
       this.setState({
         modal,
-        itemsToBuy
+        itemsToBuy,
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -169,44 +199,60 @@ class App extends React.Component {
     const { id } = event.target;
     const modal = {
       showing: true,
-      content: 'Are You Sure?',
-      title: 'Confirm Delete',
+      content: "Are You Sure?",
+      title: "Confirm Delete",
       primaryButton: (
         <>
-          <button className='btn btn-danger' onClick={() => { this.deleteItem(id); }}>Confirm Delete</button>
-          <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.cancelOperation}>Close</button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              this.deleteItem(id);
+            }}
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-dismiss="modal"
+            onClick={this.cancelOperation}
+          >
+            Close
+          </button>
         </>
-      )
+      ),
     };
     this.setState({
-      modal
+      modal,
     });
   }
 
   async updateItemWithNewStore(newItem) {
     const postInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newItem)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newItem),
     };
     try {
-      const response = await fetch('/api/items/update-new-store', postInit);
+      const response = await fetch("/api/items/update-new-store", postInit);
       const responseJSON = await response.json();
       if (!response.ok) {
         throw response;
       }
       const itemsToBuy = [...this.state.itemsToBuy];
-      const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === parseInt(newItem.itemId));
+      const indexOfUpdated = itemsToBuy.findIndex(
+        (index) => index.itemid === parseInt(newItem.itemId)
+      );
       itemsToBuy[indexOfUpdated] = responseJSON;
       const modal = {
         showing: false,
-        content: '',
-        primaryButton: '',
-        title: ''
+        content: "",
+        primaryButton: "",
+        title: "",
       };
       this.setState({
         modal,
-        itemsToBuy
+        itemsToBuy,
       });
       this.handleFeedbackReset();
     } catch (error) {
@@ -218,9 +264,9 @@ class App extends React.Component {
   async updateItem(item) {
     const id = item.itemId;
     const updateInit = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(item)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(item),
     };
     try {
       const response = await fetch(`/api/items/${id}`, updateInit);
@@ -228,34 +274,48 @@ class App extends React.Component {
       if (!response.ok) {
         throw response;
       }
-      if (responseJSON === 'no store') {
+      if (responseJSON === "no store") {
         const modal = { ...this.state.modal };
         modal.showing = true;
-        modal.title = 'New Store';
+        modal.title = "New Store";
         modal.content = `"${item.store}" is not in the database. Create New Store?`;
         modal.primaryButton = (
           <>
-            <button className='btn btn-primary' onClick={() => { this.updateItemWithNewStore(item); }}>OK</button>
-            <button className='btn btn-outline-dark' onClick={this.cancelOperation}>Cancel</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                this.updateItemWithNewStore(item);
+              }}
+            >
+              OK
+            </button>
+            <button
+              className="btn btn-outline-dark"
+              onClick={this.cancelOperation}
+            >
+              Cancel
+            </button>
           </>
         );
         this.setState({
           modal,
-          pendingConfirmDelete: true
+          pendingConfirmDelete: true,
         });
       } else {
         const itemsToBuy = [...this.state.itemsToBuy];
-        const indexOfUpdated = itemsToBuy.findIndex(index => index.itemid === responseJSON.itemid);
+        const indexOfUpdated = itemsToBuy.findIndex(
+          (index) => index.itemid === responseJSON.itemid
+        );
         itemsToBuy[indexOfUpdated] = responseJSON;
         const modal = {
           showing: false,
-          content: '',
-          primaryButton: '',
-          title: ''
+          content: "",
+          primaryButton: "",
+          title: "",
         };
         this.setState({
           modal,
-          itemsToBuy
+          itemsToBuy,
         });
         this.handleFeedbackReset();
       }
@@ -268,7 +328,7 @@ class App extends React.Component {
   setView(name, store) {
     const view = {
       name,
-      store
+      store,
     };
     this.setState({ view });
   }
@@ -276,15 +336,15 @@ class App extends React.Component {
   handleFeedbackReset() {
     const modal = {
       showing: false,
-      content: '',
-      title: '',
-      primaryButton: ''
+      content: "",
+      title: "",
+      primaryButton: "",
     };
     setTimeout(() => {
       this.setState({
         modal,
         pendingConfirmDelete: false,
-        communicatingWithServer: false
+        communicatingWithServer: false,
       });
     }, 2000);
   }
@@ -292,14 +352,14 @@ class App extends React.Component {
   cancelOperation() {
     const modal = {
       showing: false,
-      content: '',
-      title: '',
-      primaryButton: null
+      content: "",
+      title: "",
+      primaryButton: null,
     };
     this.setState({
       modal,
       pendingConfirmDelete: false,
-      communicatingWithServer: false
+      communicatingWithServer: false,
     });
   }
 
@@ -310,19 +370,22 @@ class App extends React.Component {
       store: title,
       item: name,
       quantity: value,
-      itemId: id
+      itemId: id,
     };
     const modal = {
       showing: true,
-      content: <ModalInput
-        newItem={this.newItem}
-        isMobileLandscape={this.state.isMobilePortrait}
-        itemToUpdate={itemToUpdate}
-        updateItem={this.updateItem}
-        communicatingWithServer={this.state.communicatingWithServer}
-        cancelOperation={this.cancelOperation}
-        addOrUpdate='update' />,
-      title: 'Update Item'
+      content: (
+        <ModalInput
+          newItem={this.newItem}
+          isMobileLandscape={this.state.isMobilePortrait}
+          itemToUpdate={itemToUpdate}
+          updateItem={this.updateItem}
+          communicatingWithServer={this.state.communicatingWithServer}
+          cancelOperation={this.cancelOperation}
+          addOrUpdate="update"
+        />
+      ),
+      title: "Update Item",
     };
     this.setState({ modal });
   }
@@ -331,7 +394,12 @@ class App extends React.Component {
     let domView = null;
     const shoppingListView = (
       <>
-        {this.state.modal.showing ? <Modal stateDotModal={this.state.modal} cancelOperation={this.cancelOperation} /> : null}
+        {this.state.modal.showing ? (
+          <Modal
+            stateDotModal={this.state.modal}
+            cancelOperation={this.cancelOperation}
+          />
+        ) : null}
         <Header />
         <div className="container">
           <div className="row">
@@ -341,7 +409,8 @@ class App extends React.Component {
                 itemToUpdate={this.state.itemToUpdate}
                 updateItem={this.updateItem}
                 communicatingWithServer={this.state.communicatingWithServer}
-                itemsToBuy={this.state.itemsToBuy} />
+                itemsToBuy={this.state.itemsToBuy}
+              />
             </div>
             <div id="itemTable" className="col-12">
               <ItemTable
@@ -352,7 +421,8 @@ class App extends React.Component {
                 setView={this.setView}
                 updateItem={this.updateItem}
                 pendingConfirmDelete={this.state.pendingConfirmDelete}
-                handleUpdateModal={this.handleUpdateModal} />
+                handleUpdateModal={this.handleUpdateModal}
+              />
             </div>
           </div>
         </div>
@@ -365,10 +435,10 @@ class App extends React.Component {
       </>
     );
     switch (this.state.view.name) {
-      case 'shoppingList':
+      case "shoppingList":
         domView = shoppingListView;
         break;
-      case 'store':
+      case "store":
         domView = storeView;
         break;
     }

@@ -5,7 +5,7 @@ export const ColorScheme = {
   lightGreen: '#26de81',
   orange: '#fa8231',
   lightOrange: '#fd9644',
-  blue: '#3867d6',
+  blue: '#33658A',
   lightBlue: '#4b7bec',
   black: 'black',
   grey: '#778ca3',

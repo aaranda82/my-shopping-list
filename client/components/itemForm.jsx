@@ -1,10 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ColorScheme } from '../../server/public/ColorScheme';
+import React from "react";
+import styled from "styled-components";
+import { ColorScheme } from "../../server/public/ColorScheme";
 
 const { lightRed, lightGreen, grey } = ColorScheme;
 const Input = styled.input`
-  border: solid 1px ${props => props.color || null}
+  border: solid 1px ${(props) => props.color};
 `;
 
 class ItemForm extends React.Component {
@@ -12,15 +12,15 @@ class ItemForm extends React.Component {
     super(props);
     this.state = {
       item: {
-        item: '',
-        store: '',
-        quantity: '',
-        itemId: ''
+        item: "",
+        store: "",
+        quantity: "",
+        itemId: "",
       },
-      addOrUpdate: 'ADD',
+      addOrUpdate: "ADD",
       itemError: null,
       storeError: null,
-      quantityError: null
+      quantityError: null,
     };
     this.handleAdd = this.handleAdd.bind(this);
     this.itemChange = this.itemChange.bind(this);
@@ -34,20 +34,22 @@ class ItemForm extends React.Component {
 
   handleAdd(event) {
     event.preventDefault();
+    // eslint-disable-next-line no-console
+    console.log("click");
     const { itemError, storeError, quantityError } = this.state;
     const { item, store, quantity } = this.state.item;
     if (!item && !store && !quantity) {
       this.setState({
-        itemError: 'Please Add Item',
-        storeError: 'Please Add Store',
-        quantityError: 'Please Add Quantity'
+        itemError: "Please Add Item",
+        storeError: "Please Add Store",
+        quantityError: "Please Add Quantity",
       });
     } else if (!item) {
-      this.setState({ itemError: 'Please Add Item' });
+      this.setState({ itemError: "Please Add Item" });
     } else if (!store) {
-      this.setState({ storeError: 'Please Add Store' });
+      this.setState({ storeError: "Please Add Store" });
     } else if (!quantity) {
-      this.setState({ quantityError: 'Please Add Quantity' });
+      this.setState({ quantityError: "Please Add Quantity" });
     } else if (!itemError || !storeError || !quantityError) {
       this.setState({ isLoading: true });
       this.props.newItem(this.state.item);
@@ -57,14 +59,14 @@ class ItemForm extends React.Component {
   handleCancel() {
     this.setState({
       item: {
-        item: '',
-        store: '',
-        quantity: '',
-        itemId: ''
+        item: "",
+        store: "",
+        quantity: "",
+        itemId: "",
       },
       itemError: null,
       storeError: null,
-      quantityError: null
+      quantityError: null,
     });
   }
 
@@ -76,7 +78,7 @@ class ItemForm extends React.Component {
       item.item = event.target.value;
       this.setState({
         item,
-        itemError: ''
+        itemError: "",
       });
     }
   }
@@ -84,19 +86,19 @@ class ItemForm extends React.Component {
   validateItem(event) {
     event.preventDefault();
     const item = event.target.value;
-    let itemError = '';
+    let itemError = "";
     if (!item) {
-      itemError = 'Please Enter Item';
+      itemError = "Please Enter Item";
     }
     this.setState({ itemError });
   }
 
   itemInputColor() {
     switch (this.state.itemError) {
-      case 'Please Enter Item':
+      case "Please Enter Item":
         return lightRed;
         break;
-      case '':
+      case "":
         return lightGreen;
         break;
       case null:
@@ -112,7 +114,7 @@ class ItemForm extends React.Component {
       item.store = event.target.value;
       this.setState({
         item,
-        storeError: ''
+        storeError: "",
       });
     }
   }
@@ -120,19 +122,19 @@ class ItemForm extends React.Component {
   validateStore(event) {
     event.preventDefault();
     const store = event.target.value;
-    let storeError = '';
+    let storeError = "";
     if (!store) {
-      storeError = 'Please Enter Store';
+      storeError = "Please Enter Store";
     }
     this.setState({ storeError });
   }
 
   storeInputColor() {
     switch (this.state.storeError) {
-      case 'Please Enter Store':
+      case "Please Enter Store":
         return lightRed;
         break;
-      case '':
+      case "":
         return lightGreen;
         break;
       case null:
@@ -146,7 +148,7 @@ class ItemForm extends React.Component {
       item.quantity = event.target.value;
       this.setState({
         item,
-        quantityError: ''
+        quantityError: "",
       });
     }
   }
@@ -154,19 +156,19 @@ class ItemForm extends React.Component {
   validateQuantity(event) {
     event.preventDefault();
     const quantity = event.target.value;
-    let quantityError = '';
+    let quantityError = "";
     if (!quantity) {
-      quantityError = 'Please Enter Quantity';
+      quantityError = "Please Enter Quantity";
     }
     this.setState({ quantityError });
   }
 
   quantityInputColor() {
     switch (this.state.quantityError) {
-      case 'Please Enter Quantity':
+      case "Please Enter Quantity":
         return lightRed;
         break;
-      case '':
+      case "":
         return lightGreen;
         break;
       case null:
@@ -176,28 +178,28 @@ class ItemForm extends React.Component {
 
   handleAddButtonClass() {
     const { item, store, quantity } = this.state.item;
-    if (this.state.addOrUpdate === 'ADD') {
+    if (this.state.addOrUpdate === "ADD") {
       if (item && store && quantity) {
-        return 'btn-primary';
+        return "btn-primary";
       } else {
-        return 'btn-secondary';
+        return "btn-secondary";
       }
     } else {
-      return 'btn-success';
+      return "btn-success";
     }
   }
 
   handleAddButtonText() {
     const className = this.handleAddButtonClass();
     switch (className) {
-      case 'btn-primary':
-        return 'ADD';
+      case "btn-primary":
+        return "ADD";
         break;
-      case 'btn-secondary':
-        return 'ENTER ITEM INFO';
+      case "btn-secondary":
+        return "ENTER ITEM INFO";
         break;
-      case 'btn-success':
-        return 'UPDATE';
+      case "btn-success":
+        return "UPDATE";
         break;
     }
   }
@@ -209,7 +211,7 @@ class ItemForm extends React.Component {
 
   renderStores() {
     const storeList = [];
-    this.props.itemsToBuy.forEach(element => {
+    this.props.itemsToBuy.forEach((element) => {
       const { store } = element;
       if (!storeList.includes(store)) {
         storeList.push(store);
@@ -223,16 +225,20 @@ class ItemForm extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.communicatingWithServer !== prevProps.communicatingWithServer) {
+    if (
+      this.props.communicatingWithServer !== prevProps.communicatingWithServer
+    ) {
       this.handleCancel();
     }
   }
 
   render() {
     return (
-      <form className='needs-validation' noValidate>
+      <form className="needs-validation" noValidate>
         <div className="form-group">
-          <label htmlFor="Item" className="mt-3">I need:</label>
+          <label htmlFor="Item" className="mt-3">
+            I need:
+          </label>
           <Input
             color={this.itemInputColor()}
             type="text"
@@ -240,7 +246,9 @@ class ItemForm extends React.Component {
             value={this.state.item.item}
             onChange={this.itemChange}
             onBlur={this.validateItem}
-            disabled={this.handleEnableInputs()} />
+            disabled={this.handleEnableInputs()}
+            placeholder="add item"
+          />
           <div className="text-danger">{this.state.itemError}</div>
         </div>
 
@@ -254,10 +262,10 @@ class ItemForm extends React.Component {
             value={this.state.item.store}
             onChange={this.storeChange}
             onBlur={this.validateStore}
-            disabled={this.handleEnableInputs()} />
-          <datalist id="store">
-            {this.renderStores()}
-          </datalist>
+            disabled={this.handleEnableInputs()}
+            placeholder="add store"
+          />
+          <datalist id="store">{this.renderStores()}</datalist>
           <div className="text-danger">{this.state.storeError}</div>
         </div>
 
@@ -270,16 +278,25 @@ class ItemForm extends React.Component {
             value={this.state.item.quantity}
             onChange={this.quantityChange}
             onBlur={this.validateQuantity}
-            disabled={this.handleEnableInputs()} />
+            disabled={this.handleEnableInputs()}
+            placeholder="add quantity"
+          />
           <div className="text-danger">{this.state.quantityError}</div>
         </div>
         <button
           type="submit"
           className={`btn m-1 ${this.handleAddButtonClass()}`}
-          onClick={this.handleAdd} >
+          onClick={this.handleAdd}
+        >
           {this.handleAddButtonText()}
         </button>
-        <button type="button" className="btn btn-outline-dark m-1" onClick={this.handleCancel}>CANCEL</button>
+        <button
+          type="button"
+          className="btn btn-dark m-1"
+          onClick={this.handleCancel}
+        >
+          CANCEL
+        </button>
       </form>
     );
   }
